@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Чистые Новости для VK.com - Настройки</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div id="main">
+  <div id="logo">
+    <a target="_blank" href="https://chrome.google.com/webstore/detail/poannipkjoijnlchnpljlhgphaappbkf">Чистые Новости для VK.com</a>
+  </div>
+  <form name="settingsForm">
+    <label class="textcenter"><span>Скрывать репосты:</span></label><div></div>
+    <label><input type="checkbox" name="groups" value="checked">записей сообществ</label>
+    <label><input type="checkbox" name="mygroups" value="checked">от сообществ, на которые я подписан</label>
+    <label><input type="checkbox" name="people" value="checked">записей людей</label>
+    <div><hr id="myline"></div><div></div>
+    <label class="textcenter"><span>Дополнительно скрывать посты:</span></label><div></div>
+    <label title="sprashivai.ru, spring.me, nekto.me, ask.fm"><input type="checkbox" name="links" value="checked">со ссылками на "отвечальники"</label>
+    <label><input type="checkbox" name="apps" value="checked">от приложений и игр</label>
+    <label><input type="checkbox" name="group_share" value="checked">со ссылками на группы</label>
+    <label><input type="checkbox" name="event_share" value="checked">со ссылками на мероприятия</label>
+    <label title="где есть ссылка &quot;Показать полностью&quot;"><input type="checkbox" name="wall_post_more" value="checked">где много текста</label>
+    <label><input type="checkbox" name="likes" value="checked">без лайков</label>
+    <label><input type="checkbox" name="comments" value="checked">без комментариев</label>
+  </form>
+</div>
+<script src="background.js"></script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+html, body {
+  font: 12px sans-serif;
+}
+
+#main {
+  width: 250px;
+  margin: 0 auto;
+  padding: 10px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px #597da3;
+  color: #fff;
+  background: #597da3;
+}
+
+#logo {
+  text-align: center;
+  font-size: 17px;
+  margin-bottom: 5px;
+}
+
+#logo a {
+  text-decoration: none;
+  color: #fff;
+}
+
+#logo a:hover, label:hover {
+  text-shadow: 0 0 10px #fff;
+}
+
+form {
+  user-select: none;
+}
+
+.textcenter {
+  display: block;
+  text-align: center;
+}
+
+.textcenter:hover {
+  text-shadow: none;
+}
+
+label {
+  display: block;
+}
