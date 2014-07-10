@@ -1,27 +1,29 @@
-"use strict";
 //The main function
 function apply(tabId) {
+  "use strict";
   chrome.storage.sync.get(null, function (data) {
     var cssCode = "",
       scriptCode = "function nkchgApply() { 'use strict';";
 
     if (data.groups === "checked") {
 
-      if (data.people === "checked")
-          cssCode += "div[class^='feed_repost'] {display: none;}";
-      else
-          cssCode +=
-            "div[class^='feed_repost'] {display: block;}" +
-            "div[class^='feed_repost-'], div[class^='feed_reposts_'] {display: none;}";
+      if (data.people === "checked") {
+        cssCode += "div[class^='feed_repost'] {display: none;}";
+      } else {
+        cssCode +=
+          "div[class^='feed_repost'] {display: block;}" +
+          "div[class^='feed_repost-'], div[class^='feed_reposts_'] {display: none;}";
+      }
 
-      if (data.mygroups === "checked")
-          cssCode += "div[id^=post-].post_copy {display: none;}";
-      else
-          cssCode += "div[id^=post-].post_copy {display: block;}";
+      if (data.mygroups === "checked") {
+        cssCode += "div[id^=post-].post_copy {display: none;}";
+      } else {
+        cssCode += "div[id^=post-].post_copy {display: block;}";
+      }
 
+    } else {
+      cssCode += "div[class^='feed_repost'], div[id^=post-].post_copy {display: block;}";
     }
-    else
-        cssCode += "div[class^='feed_repost'], div[id^=post-].post_copy {display: block;}";
 
     scriptCode +=
       "var els = nkchgWall.getElementsByTagName('a');" +
@@ -44,18 +46,20 @@ function apply(tabId) {
       scriptCode +
       "nkchgApply();" +
       "console.log('Чистые новости для VK.com: your wall has been cleaned');"
-    });
+      });
   });
 }
 
 //Do things with the second and the third checkbox:
 function checkboxes() {
+  "use strict";
   var select = document.settingsForm,
     child;
   chrome.storage.sync.get(null, function (data) {
     //Show/hide the second and the third checkbox depending on the state of the first checkbox ("groups"):
-    var dataObj = {};
-    for (var i = 3; i < 5; i++) {
+    var dataObj = {},
+      i;
+    for (i = 3; i < 5; i += 1) {
       child = select.children[i];
       //If the first checkbox ("groups") is unchecked then uncheck the second and the third and reset their settings in storage:
       if (data.groups !== "checked") {
@@ -67,46 +71,15 @@ function checkboxes() {
         child.style.display = 'block';
       }
     }
-    if (Object.keys(dataObj).length !== 0)
-      chrome.storage.sync.set(dataObj, function () {});
+    if (Object.keys(dataObj).length !== 0) {
+      chrome.storage.sync.set(dataObj);
+    }
   });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-  //For older versions: convert localStorage to chrome.storage.sync
-  var dataObj = {};
-  for (var i = 0, l = localStorage.length; i < l; i++) {
-    var name = localStorage.key(i);
-    dataObj[name] = localStorage[name];
-  }
-  if (Object.keys(dataObj).length !== 0) {
-    chrome.storage.sync.set(dataObj, function () {
-      localStorage.clear();
-    });
-  }
-  //If there is no saved settings then set them to defaults (check only the first checkbox):
-  chrome.storage.sync.get(null, function (data) {
-    if (Object.keys(data).length === 0) {
-      chrome.storage.sync.set({"groups": "checked"}, function () {});
-    }
-  });
-  var select = document.settingsForm;
-  if (select) {
-    checkboxes();
-    select = select.getElementsByTagName("input");
-    chrome.storage.sync.get(null, function (data) {
-      for (var i = 0; i < select.length; i++) {
-        var child = select[i];
-        child.addEventListener('click', clickHandler);
-        if (data[child.name] === "checked")
-          child.checked = true;
-      }
-    });
-  }
-});
-
 //Catch clicks on checkboxes and remember the values ("checked"), reapply the main function:
 function clickHandler() {
+  "use strict";
   var name = this.name,
     value = this.value,
     dataObj = {};
@@ -119,8 +92,47 @@ function clickHandler() {
   });
 }
 
+document.addEventListener('DOMContentLoaded', function () {
+  "use strict";
+  //For older versions: convert localStorage to chrome.storage.sync
+  var dataObj = {},
+    select = document.settingsForm,
+    name,
+    child,
+    i;
+  for (i = 0; i < localStorage.length; i += 1) {
+    name = localStorage.key(i);
+    dataObj[name] = localStorage[name];
+  }
+  if (Object.keys(dataObj).length !== 0) {
+    chrome.storage.sync.set(dataObj, function () {
+      localStorage.clear();
+    });
+  }
+  //If there is no saved settings then set them to defaults (check only the first checkbox):
+  chrome.storage.sync.get(null, function (data) {
+    if (Object.keys(data).length === 0) {
+      chrome.storage.sync.set({"groups": "checked"});
+    }
+  });
+  if (select) {
+    checkboxes();
+    select = select.getElementsByTagName("input");
+    chrome.storage.sync.get(null, function (data) {
+      for (i = 0; i < select.length; i += 1) {
+        child = select[i];
+        child.addEventListener('click', clickHandler);
+        if (data[child.name] === "checked") {
+          child.checked = true;
+        }
+      }
+    });
+  }
+});
+
 //Launch the main function only on certain pages of VK:
 function checkForValidUrl(tabId, changeInfo, tab) {
+  "use strict";
   if (changeInfo.status === "loading") {
     var url = tab.url;
     if (url.indexOf('vk.com/feed') > -1) {
@@ -130,7 +142,7 @@ function checkForValidUrl(tabId, changeInfo, tab) {
           //<div>s with these classes will be hidden:
           chrome.tabs.insertCSS(tabId, {code:
             ".nkchgGroups, .nkchgPeople, .nkchgMygroups, .nkchgLinks, .nkchgGroup_share, .nkchgEvent_share, .nkchgApps, .nkchgWall_post_more, .nkchgLikes, .nkchgComments {display: none;}"
-          });
+            });
           chrome.tabs.executeScript(tabId, {code:
             "var nkchgWall = document.getElementById('feed_rows');" +
             "if (!nkchgObserver)" +
@@ -171,18 +183,18 @@ function checkForValidUrl(tabId, changeInfo, tab) {
             "    nkchgClosestEl(el, action, ' ' + newClassName);" +
             "  }" +
             "}"
-          });
+            });
           apply(tabId);
         }
       } else {
         //Show all the <div>s that have been hidden, stop observing:
         chrome.tabs.insertCSS(tabId, {code:
           "div[class^='feed_repost'], div[id^=post-].post_copy, .nkchgGroups, .nkchgPeople, .nkchgMygroups, .nkchgLinks, .nkchgGroup_share, .nkchgEvent_share, .nkchgApps, .nkchgWall_post_more, .nkchgLikes, .nkchgComments {display: block;}"
-        });
+          });
         chrome.tabs.executeScript(tabId, {code:
           "if (nkchgObserver) nkchgObserver.disconnect();" +
           "console.log('Чистые новости для VK.com: cleaning disabled');"
-        });
+          });
       }
     }
   }
