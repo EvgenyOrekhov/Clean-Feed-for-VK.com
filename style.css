@@ -1,45 +1,29 @@
-html, body {
-  font: 12px sans-serif;
-}
+html { font: .8em sans-serif; }
 
-#main {
+body {
   width: 250px;
-  margin: 0 auto;
-  padding: 10px;
-  border-radius: 20px;
-  box-shadow: 0 0 20px #597da3;
-  color: #fff;
-  background: #597da3;
+  margin: .3em auto;
 }
 
-#logo {
+h1 {
   text-align: center;
-  font-size: 17px;
-  margin-bottom: 5px;
+  font-size: 1.3em;
+  margin-top: 0;
+  margin-bottom: .2em;
 }
 
-#logo a {
-  text-decoration: none;
-  color: #fff;
-}
+a { text-decoration: none; }
 
-#logo a:hover, label:hover {
-  text-shadow: 0 0 10px #fff;
-}
+a:hover { text-decoration: underline; }
 
-form {
-  user-select: none;
-}
+form { -webkit-user-select: none; }
 
 .textcenter {
-  display: block;
   text-align: center;
-}
-
-.textcenter:hover {
-  text-shadow: none;
+  cursor: default;
 }
 
 label {
   display: block;
+  cursor: pointer;
 }

@@ -59,7 +59,7 @@ function checkboxes() {
     //Show/hide the second and the third checkbox depending on the state of the first checkbox ("groups"):
     var dataObj = {},
       i;
-    for (i = 3; i < 5; i += 1) {
+    for (i = 2; i < 4; i += 1) {
       child = select.children[i];
       //If the first checkbox ("groups") is unchecked then uncheck the second and the third and reset their settings in storage:
       if (data.groups !== "checked") {
