@@ -26,11 +26,15 @@ function apply(tabId) {
     }
 
     scriptCode +=
-      "var els = nkchgWall.getElementsByTagName('a');" +
-      "for (var i = 0, l = els.length; i < l; i++) {" +
-      "  var el = els[i];" +
-      "  if (el.href.search(/sprashivai.ru|spring.me|nekto.me|ask.fm/) !== -1)" +
+      "var els = nkchgWall.getElementsByTagName('a')," +
+      "  l = els.length," +
+      "  i," +
+      "  el;" +
+      "for (i = 0; i < l; i += 1) {" +
+      "  el = els[i];" +
+      "  if (el.href.search(/sprashivai\\.ru|spring\\.me|nekto\\.me|ask\\.fm/) !== -1) {" +
       "    nkchgClosestEl(el, '" + data.links + "', ' nkchgLinks');" +
+      "  }" +
       "}" +
       "nkchgFind('group_share', '" + data.group_share + "', 'nkchgGroup_share');" +
       "nkchgFind('event_share', '" + data.event_share + "', 'nkchgEvent_share');" +
@@ -145,42 +149,47 @@ function checkForValidUrl(tabId, changeInfo, tab) {
             });
           chrome.tabs.executeScript(tabId, {code:
             "var nkchgWall = document.getElementById('feed_rows');" +
-            "if (!nkchgObserver)" +
-            "  var nkchgObserver = new MutationObserver(function (mutations) {" +
+            "if (!nkchgObserver) {" +
+            "  var nkchgObserver = new window.MutationObserver(function (mutations) {" +
             "    'use strict';" +
             "    if (mutations[0].addedNodes.length !== 0) {" +
             "      nkchgApply();" +
             "      console.log('Чистые новости для VK.com: your wall has been cleaned by the MutationObserver');" +
             "    }" +
             "  });" +
+            "}" +
             "nkchgObserver.observe(nkchgWall, {childList: true});" +
             "function nkchgClosestEl(elem, action, nkchgClass) {" +
             "  'use strict';" +
-            "  var parent = elem.parentNode;" +
-            "  while (parent != nkchgWall) {" +
+            "  var parent = elem.parentNode," +
+            "    re = new RegExp(nkchgClass, 'g');" +
+            "  while (parent !== nkchgWall) {" +
             "    if (parent.className.indexOf('feed_row') !== -1) {" +
-            "      var re = new RegExp(nkchgClass, 'g');" +
             "      if (action === 'checked') {" +
-            "        if (parent.className.indexOf(nkchgClass) === -1)" +
+            "        if (parent.className.indexOf(nkchgClass) === -1) {" +
             "          parent.className += nkchgClass;" +
+            "        }" +
             "        return;" +
             "      } else {" +
             "        parent.className = parent.className.replace(re, '');" +
             "        return;" +
             "      }" +
-            "    }" +
-            "    else" +
+            "    } else {" +
             "      parent = parent.parentNode;" +
+            "    }" +
             "  }" +
             "}" +
             "function nkchgFind(className, action, newClassName) {" +
             "  'use strict';" +
-            "  var els = nkchgWall.getElementsByClassName(className);" +
-            "  for (var i = 0, l = els.length; i < l; i++) {" +
-            "    var el = els[i];" +
-            "    if (newClassName === 'nkchgApps' && el.href.indexOf('app3698024') !== -1)" +
-            "      continue;" +
-            "    nkchgClosestEl(el, action, ' ' + newClassName);" +
+            "  var els = nkchgWall.getElementsByClassName(className)," +
+            "    l = els.length," +
+            "    i," +
+            "    el;" +
+            "  for (i = 0; i < l; i += 1) {" +
+            "    el = els[i];" +
+            "    if (!(newClassName === 'nkchgApps' && el.href.indexOf('app3698024') !== -1)) {" +
+            "      nkchgClosestEl(el, action, ' ' + newClassName);" +
+            "    }" +
             "  }" +
             "}"
             });
