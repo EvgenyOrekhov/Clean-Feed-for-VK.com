@@ -32,7 +32,7 @@ function apply(tabId) {
       "  el;" +
       "for (i = 0; i < l; i += 1) {" +
       "  el = els[i];" +
-      "  if (el.href.search(/sprashivai\\.ru|spring\\.me|nekto\\.me|ask\\.fm/) !== -1) {" +
+      "  if (/sprashivai\\.ru|spring\\.me|nekto\\.me|ask\\.fm/.test(el.href)) {" +
       "    nkchgClosestEl(el, '" + data.links + "', ' nkchgLinks');" +
       "  }" +
       "}" +
@@ -139,9 +139,9 @@ function checkForValidUrl(tabId, changeInfo, tab) {
   "use strict";
   if (changeInfo.status === "loading") {
     var url = tab.url;
-    if (url.indexOf('vk.com/feed') > -1) {
-      if (url.search(/photos|articles|likes|notifications|comments|updates|replies/) === -1) {
-        if (url.search(/\/feed\?[wz]=/) === -1) {
+    if (url.indexOf('vk.com/feed') !== -1) {
+      if (!/photos|articles|likes|notifications|comments|updates|replies/.test(url)) {
+        if (!/\/feed\?[wz]=/.test(url)) {
           chrome.pageAction.show(tabId);
           //<div>s with these classes will be hidden:
           chrome.tabs.insertCSS(tabId, {code:
