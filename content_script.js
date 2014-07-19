@@ -23,13 +23,11 @@ function nkchgClosestEl(elem, action, nkchgClass) {
           parent.className += nkchgClass;
         }
         return;
-      } else {
-        parent.className = parent.className.replace(re, '');
-        return;
       }
-    } else {
-      parent = parent.parentNode;
+      parent.className = parent.className.replace(re, '');
+      return;
     }
+    parent = parent.parentNode;
   }
 }
 

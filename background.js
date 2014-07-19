@@ -42,15 +42,12 @@ function apply(tabId) {
       "nkchgFind('wall_post_more', '" + data.wall_post_more + "', 'nkchgWall_post_more');" +
       "nkchgFind('post_like_icon no_likes', '" + data.likes + "', 'nkchgLikes');" +
       "nkchgFind('reply_link', '" + data.comments + "', 'nkchgComments');" +
-      "}";
+      "}" +
+      "nkchgApply();" +
+      "console.log('Чистые новости для VK.com: your wall has been cleaned');";
 
     chrome.tabs.insertCSS(tabId, {code: cssCode});
-
-    chrome.tabs.executeScript(tabId, {code:
-      scriptCode +
-      "nkchgApply();" +
-      "console.log('Чистые новости для VK.com: your wall has been cleaned');"
-      });
+    chrome.tabs.executeScript(tabId, {code: scriptCode});
   });
 }
 
