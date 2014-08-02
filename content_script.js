@@ -1,3 +1,4 @@
+/*jslint browser: true, devel: true, indent: 2 */
 var nkchgWall = document.getElementById('feed_rows');
 
 if (!nkchgObserver) {

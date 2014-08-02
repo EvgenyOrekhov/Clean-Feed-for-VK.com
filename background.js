@@ -1,3 +1,5 @@
+/*global chrome */
+/*jslint browser: true, devel: true, indent: 2 */
 //The main function
 function apply(tabId) {
   "use strict";
