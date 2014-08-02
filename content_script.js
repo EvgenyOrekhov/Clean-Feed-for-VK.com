@@ -1,5 +1,7 @@
+/*global nkchgApply */
 /*jslint browser: true, devel: true, indent: 2 */
-var nkchgWall = document.getElementById('feed_rows');
+var nkchgWall = document.getElementById('feed_rows'),
+  nkchgObserver;
 
 if (!nkchgObserver) {
   var nkchgObserver = new window.MutationObserver(function (mutations) {
