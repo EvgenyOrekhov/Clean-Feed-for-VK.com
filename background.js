@@ -6,17 +6,19 @@ var CFFVK;
 CFFVK = CFFVK || (function () {
   "use strict";
 
-  //For older versions: convert localStorage to chrome.storage.sync
+  // For older versions: convert localStorage to chrome.storage.sync
   function upgradeStorage() {
-    var dataObj = {},
-      name,
+    var newSettings = {},
+      key,
       i;
+
     for (i = 0; i < localStorage.length; i += 1) {
-      name = localStorage.key(i);
-      dataObj[name] = localStorage[name];
+      key = localStorage.key(i);
+      newSettings[key] = localStorage[key];
     }
-    if (Object.keys(dataObj).length !== 0) {
-      chrome.storage.sync.set(dataObj, function () {
+
+    if (Object.keys(newSettings).length > 0) {
+      chrome.storage.sync.set(newSettings, function () {
         localStorage.clear();
       });
     }
@@ -26,124 +28,110 @@ CFFVK = CFFVK || (function () {
     upgradeStorage();
   }
 
-  //If there is no saved settings then set them to defaults (check only the first checkbox):
-  chrome.storage.sync.get(null, function (data) {
-    if (Object.keys(data).length === 0) {
+  // If there is no saved settings then set them to defaults
+  // (check only the first checkbox):
+  chrome.storage.sync.get(null, function (settings) {
+    if (Object.keys(settings).length === 0) {
       chrome.storage.sync.set({"groups": "checked"});
     }
   });
 
   return {
 
-    //The main function
+    // The main function
     execute: function execute(tabId) {
-      chrome.storage.sync.get(null, function (data) {
-        var cssCode = "",
-          scriptCode = "CFFVK.clean = function clean() { 'use strict';";
+      chrome.storage.sync.get(null, function (settings) {
+        var cssCode = "";
 
-        if (data.groups === "checked") {
+        if (settings.groups === "checked") {
 
-          if (data.people === "checked") {
+          if (settings.people === "checked") {
             cssCode += "div[class^='feed_repost'] {display: none;}";
           } else {
             cssCode +=
               "div[class^='feed_repost'] {display: block;}" +
-              "div[class^='feed_repost-'], div[class^='feed_reposts_'] {display: none;}";
+              "div[class^='feed_repost-']," +
+              "div[class^='feed_reposts_'] {display: none;}";
           }
 
-          if (data.mygroups === "checked") {
+          if (settings.mygroups === "checked") {
             cssCode += "div[id^=post-].post_copy {display: none;}";
           } else {
             cssCode += "div[id^=post-].post_copy {display: block;}";
           }
 
         } else {
-          cssCode += "div[class^='feed_repost'], div[id^=post-].post_copy {display: block;}";
+          cssCode += "div[class^='feed_repost']," +
+            "div[id^=post-].post_copy {display: block;}";
         }
 
-        scriptCode +=
-          "var els = CFFVK.feed.getElementsByTagName('a')," +
-          "  l = els.length," +
-          "  i," +
-          "  el;" +
-          "for (i = 0; i < l; i += 1) {" +
-          "  el = els[i];" +
-          "  if (/sprashivai\\.ru|spring\\.me|nekto\\.me|ask\\.fm/.test(el.href)) {" +
-          "    CFFVK.processFeedItem(el, '" + data.links + "', ' cffvk-links');" +
-          "  }" +
-          "}" +
-          "CFFVK.find('group_share', '" + data.group_share + "', 'cffvk-group_share');" +
-          "CFFVK.find('event_share', '" + data.event_share + "', 'cffvk-event_share');" +
-          "CFFVK.find('wall_post_source_default', '" + data.apps + "', 'cffvk-apps');" +
-          "CFFVK.find('wall_post_more', '" + data.wall_post_more + "', 'cffvk-wall_post_more');" +
-          "CFFVK.find('post_like_icon no_likes', '" + data.likes + "', 'cffvk-likes');" +
-          "CFFVK.find('reply_link', '" + data.comments + "', 'cffvk-comments');" +
-          "};" +
-          "CFFVK.clean();" +
-          "console.log('Clean Feed for VK.com: your feed has been cleaned');";
-
         chrome.tabs.insertCSS(tabId, {code: cssCode});
-        chrome.tabs.executeScript(tabId, {code: scriptCode});
+        chrome.tabs.executeScript(tabId, {code:
+          "CFFVK.clean(" + JSON.stringify(settings) + ");"
+          });
       });
     },
 
-    //Do things with the second and the third checkboxes:
-    checkboxes: function checkboxes() {
-      var select = document.settingsForm,
-        child;
-
-      chrome.storage.sync.get(null, function (data) {
-        var dataObj = {},
+    // Do things with the second and the third checkboxes:
+    secondAndThirdCheckboxes: function secondAndThirdCheckboxes() {
+      chrome.storage.sync.get(null, function (settings) {
+        var form = document.settingsForm,
+          newSettings = {},
+          label,
+          checkbox,
           i;
 
         for (i = 2; i < 4; i += 1) {
-          child = select.children[i];
+          label = form.children[i];
 
-          //If the first checkbox ("groups") is unchecked then uncheck the second and the third and reset their settings in storage:
-          if (data.groups !== "checked") {
-            child.style.display = "none";
-            child = child.children[0];
-            child.checked = false;
-            dataObj[child.name] = "";
+          // If the first checkbox ("groups") is unchecked then uncheck
+          // the second and the third and reset their settings in storage:
+          if (settings.groups !== "checked") {
+            label.style.display = "none";
+            checkbox = label.children[0];
+            checkbox.checked = false;
+            newSettings[checkbox.name] = "";
           } else {
-            child.style.display = "block";
+            label.style.display = "block";
           }
         }
 
-        if (Object.keys(dataObj).length !== 0) {
-          chrome.storage.sync.set(dataObj);
+        if (Object.keys(newSettings).length > 0) {
+          chrome.storage.sync.set(newSettings);
         }
       });
     },
 
-    //Catch clicks on checkboxes and remember the values ("checked"), reapply the main function:
+    // Catch clicks on checkboxes and remember the values ("checked"),
+    // reapply the main function:
     clickHandler: function clickHandler() {
-      var name = this.name,
+      var key = this.name,
         value = this.value,
-        dataObj = {};
+        newSettings = {};
 
-      chrome.storage.sync.get(name, function (data) {
-        dataObj[name] = data[name] === value ? "" : value;
-        chrome.storage.sync.set(dataObj, function () {
-          CFFVK.checkboxes();
+      chrome.storage.sync.get(key, function (settings) {
+        newSettings[key] = settings[key] === value ? "" : value;
+        chrome.storage.sync.set(newSettings, function () {
+          CFFVK.secondAndThirdCheckboxes();
           CFFVK.execute();
         });
       });
     },
 
-    //Launch the main function only on certain pages of VK:
+    // Launch the main function only on certain pages of VK:
     checkForValidUrl: function checkForValidUrl(tabId, changeInfo, tab) {
       if (changeInfo.status === "loading") {
         var url = tab.url;
 
-        if (url.indexOf("vk.com/feed") !== -1) {
-          if (!/photos|articles|likes|notifications|comments|updates|replies/.test(url)) {
+        if (url.indexOf("vk.com/feed") > -1) {
+          if (!/photos|articles|likes|notifications|comments|updates|replies/
+              .test(url)) {
             if (!/\/feed\?[wz]=/.test(url)) {
               chrome.pageAction.show(tabId);
 
-              //divs with these classes will be hidden:
+              // divs with these classes will be hidden:
               chrome.tabs.insertCSS(tabId, {code:
-                ".cffvk-groups, .cffvk-people, .cffvk-mygroups, .cffvk-links, .cffvk-group_share, .cffvk-event_share, .cffvk-apps, .cffvk-wall_post_more, .cffvk-likes, .cffvk-comments {display: none;}"
+                ".cffvk-groups, .cffvk-people, .cffvk-mygroups, .cffvk-links, .cffvk-group_share, .cffvk-event_share, .cffvk-wall_post_source_default, .cffvk-wall_post_more, .cffvk-post_like_icon, .cffvk-reply_link {display: none;}"
                 });
 
               chrome.tabs.executeScript(tabId, {file: "content_script.js"});
@@ -151,14 +139,14 @@ CFFVK = CFFVK || (function () {
             }
           } else {
 
-            //Show all the divs that have been hidden, stop observing:
+            // Show all the divs that have been hidden, stop observing:
             chrome.tabs.insertCSS(tabId, {code:
-              "div[class^='feed_repost'], div[id^=post-].post_copy, .cffvk-groups, .cffvk-people, .cffvk-mygroups, .cffvk-links, .cffvk-group_share, .cffvk-event_share, .cffvk-apps, .cffvk-wall_post_more, .cffvk-likes, .cffvk-comments {display: block;}"
+              "div[class^='feed_repost'], div[id^=post-].post_copy, .cffvk-groups, .cffvk-people, .cffvk-mygroups, .cffvk-links, .cffvk-group_share, .cffvk-event_share, .cffvk-wall_post_source_default, .cffvk-wall_post_more, .cffvk-post_like_icon, .cffvk-reply_link {display: block;}"
               });
             chrome.tabs.executeScript(tabId, {code:
               "if (window.CFFVK && CFFVK.observer) {" +
               "  CFFVK.observer.disconnect();" +
-              "  console.log('Clean Feed for VK.com: cleaning disabled');" +
+              "  console.log('CFFVK: cleaning disabled');" +
               "};"
               });
           }
@@ -167,19 +155,20 @@ CFFVK = CFFVK || (function () {
     },
 
     init: function init() {
-      var select = document.settingsForm,
-        child,
+      var form = document.settingsForm,
+        checkbox,
         i;
 
-      if (select) {
-        CFFVK.checkboxes();
-        select = select.getElementsByTagName("input");
-        chrome.storage.sync.get(null, function (data) {
-          for (i = 0; i < select.length; i += 1) {
-            child = select[i];
-            child.addEventListener("click", CFFVK.clickHandler);
-            if (data[child.name] === "checked") {
-              child.checked = true;
+      if (form) {
+        CFFVK.secondAndThirdCheckboxes();
+
+        form = form.getElementsByTagName("input");
+        chrome.storage.sync.get(null, function (settings) {
+          for (i = 0; i < form.length; i += 1) {
+            checkbox = form[i];
+            checkbox.addEventListener("click", CFFVK.clickHandler);
+            if (settings[checkbox.name] === "checked") {
+              checkbox.checked = true;
             }
           }
         });

@@ -5,7 +5,7 @@ body {
   font-family: sans-serif;
 }
 
-#title {
+.title {
   text-align: center;
   font-weight: bold;
   font-size: 1.3em;
