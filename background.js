@@ -24,6 +24,86 @@ CFFVK = CFFVK || (function () {
     }
   }
 
+  // The main function
+  function execute(tabId) {
+    chrome.storage.sync.get(null, function (settings) {
+      var cssCode = "";
+
+      if (settings.groups === "checked") {
+
+        if (settings.people === "checked") {
+          cssCode += "div[class^='feed_repost'] {display: none;}";
+        } else {
+          cssCode +=
+            "div[class^='feed_repost'] {display: block;}" +
+            "div[class^='feed_repost-']," +
+            "div[class^='feed_reposts_'] {display: none;}";
+        }
+
+        if (settings.mygroups === "checked") {
+          cssCode += "div[id^=post-].post_copy {display: none;}";
+        } else {
+          cssCode += "div[id^=post-].post_copy {display: block;}";
+        }
+
+      } else {
+        cssCode += "div[class^='feed_repost']," +
+          "div[id^=post-].post_copy {display: block;}";
+      }
+
+      chrome.tabs.insertCSS(tabId, {code: cssCode});
+      chrome.tabs.executeScript(tabId, {code:
+        "CFFVK.clean(" + JSON.stringify(settings) + ");"
+        });
+    });
+  }
+
+  // Do things with the second and the third checkboxes:
+  function secondAndThirdCheckboxes() {
+    chrome.storage.sync.get(null, function (settings) {
+      var form = document.settingsForm,
+        newSettings = {},
+        label,
+        checkbox,
+        i;
+
+      for (i = 2; i < 4; i += 1) {
+        label = form.children[i];
+
+        // If the first checkbox ("groups") is unchecked then uncheck
+        // the second and the third and reset their settings in storage:
+        if (settings.groups !== "checked") {
+          label.style.display = "none";
+          checkbox = label.children[0];
+          checkbox.checked = false;
+          newSettings[checkbox.name] = "";
+        } else {
+          label.style.display = "block";
+        }
+      }
+
+      if (Object.keys(newSettings).length > 0) {
+        chrome.storage.sync.set(newSettings);
+      }
+    });
+  }
+
+  // Catch clicks on checkboxes and remember the values ("checked"),
+  // reapply the main function:
+  function clickHandler() {
+    var key = this.name,
+      value = this.value,
+      newSettings = {};
+
+    chrome.storage.sync.get(key, function (settings) {
+      newSettings[key] = settings[key] === value ? "" : value;
+      chrome.storage.sync.set(newSettings, function () {
+        secondAndThirdCheckboxes();
+        execute();
+      });
+    });
+  }
+
   if (localStorage.length > 0) {
     upgradeStorage();
   }
@@ -37,86 +117,6 @@ CFFVK = CFFVK || (function () {
   });
 
   return {
-
-    // The main function
-    execute: function execute(tabId) {
-      chrome.storage.sync.get(null, function (settings) {
-        var cssCode = "";
-
-        if (settings.groups === "checked") {
-
-          if (settings.people === "checked") {
-            cssCode += "div[class^='feed_repost'] {display: none;}";
-          } else {
-            cssCode +=
-              "div[class^='feed_repost'] {display: block;}" +
-              "div[class^='feed_repost-']," +
-              "div[class^='feed_reposts_'] {display: none;}";
-          }
-
-          if (settings.mygroups === "checked") {
-            cssCode += "div[id^=post-].post_copy {display: none;}";
-          } else {
-            cssCode += "div[id^=post-].post_copy {display: block;}";
-          }
-
-        } else {
-          cssCode += "div[class^='feed_repost']," +
-            "div[id^=post-].post_copy {display: block;}";
-        }
-
-        chrome.tabs.insertCSS(tabId, {code: cssCode});
-        chrome.tabs.executeScript(tabId, {code:
-          "CFFVK.clean(" + JSON.stringify(settings) + ");"
-          });
-      });
-    },
-
-    // Do things with the second and the third checkboxes:
-    secondAndThirdCheckboxes: function secondAndThirdCheckboxes() {
-      chrome.storage.sync.get(null, function (settings) {
-        var form = document.settingsForm,
-          newSettings = {},
-          label,
-          checkbox,
-          i;
-
-        for (i = 2; i < 4; i += 1) {
-          label = form.children[i];
-
-          // If the first checkbox ("groups") is unchecked then uncheck
-          // the second and the third and reset their settings in storage:
-          if (settings.groups !== "checked") {
-            label.style.display = "none";
-            checkbox = label.children[0];
-            checkbox.checked = false;
-            newSettings[checkbox.name] = "";
-          } else {
-            label.style.display = "block";
-          }
-        }
-
-        if (Object.keys(newSettings).length > 0) {
-          chrome.storage.sync.set(newSettings);
-        }
-      });
-    },
-
-    // Catch clicks on checkboxes and remember the values ("checked"),
-    // reapply the main function:
-    clickHandler: function clickHandler() {
-      var key = this.name,
-        value = this.value,
-        newSettings = {};
-
-      chrome.storage.sync.get(key, function (settings) {
-        newSettings[key] = settings[key] === value ? "" : value;
-        chrome.storage.sync.set(newSettings, function () {
-          CFFVK.secondAndThirdCheckboxes();
-          CFFVK.execute();
-        });
-      });
-    },
 
     // Launch the main function only on certain pages of VK:
     checkForValidUrl: function checkForValidUrl(tabId, changeInfo, tab) {
@@ -135,7 +135,7 @@ CFFVK = CFFVK || (function () {
                 });
 
               chrome.tabs.executeScript(tabId, {file: "content_script.js"});
-              CFFVK.execute(tabId);
+              execute(tabId);
             }
           } else {
 
@@ -160,13 +160,13 @@ CFFVK = CFFVK || (function () {
         i;
 
       if (form) {
-        CFFVK.secondAndThirdCheckboxes();
+        secondAndThirdCheckboxes();
 
         form = form.getElementsByTagName("input");
         chrome.storage.sync.get(null, function (settings) {
           for (i = 0; i < form.length; i += 1) {
             checkbox = form[i];
-            checkbox.addEventListener("click", CFFVK.clickHandler);
+            checkbox.addEventListener("click", clickHandler);
             if (settings[checkbox.name] === "checked") {
               checkbox.checked = true;
             }
