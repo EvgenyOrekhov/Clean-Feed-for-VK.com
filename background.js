@@ -90,9 +90,9 @@ CFFVK = CFFVK || (function () {
 
   // Catch clicks on checkboxes and remember the values ("checked"),
   // reapply the main function:
-  function clickHandler() {
-    var key = this.name,
-      value = this.value,
+  function clickHandler(event) {
+    var key = event.target.name,
+      value = event.target.value,
       newSettings = {};
 
     chrome.storage.sync.get(key, function (settings) {
