@@ -17,11 +17,9 @@ CFFVK = CFFVK || (function () {
       newSettings[key] = localStorage[key];
     }
 
-    if (Object.keys(newSettings).length > 0) {
-      chrome.storage.sync.set(newSettings, function () {
-        localStorage.clear();
-      });
-    }
+    chrome.storage.sync.set(newSettings, function () {
+      localStorage.clear();
+    });
   }
 
   // The main function
@@ -70,8 +68,9 @@ CFFVK = CFFVK || (function () {
       for (i = 2; i < 4; i += 1) {
         label = form.children[i];
 
-        // If the first checkbox ("groups") is unchecked then uncheck
-        // the second and the third and reset their settings in storage:
+        // If the first checkbox ("groups") is unchecked
+        // then uncheck the second and the third, hide them,
+        // and reset their settings in storage:
         if (settings.groups !== "checked") {
           label.style.display = "none";
           checkbox = label.children[0];
@@ -91,12 +90,12 @@ CFFVK = CFFVK || (function () {
   // Catch clicks on checkboxes and remember the values ("checked"),
   // reapply the main function:
   function clickHandler(event) {
-    var key = event.target.name,
+    var name = event.target.name,
       value = event.target.value,
       newSettings = {};
 
-    chrome.storage.sync.get(key, function (settings) {
-      newSettings[key] = settings[key] === value ? "" : value;
+    chrome.storage.sync.get(name, function (settings) {
+      newSettings[name] = settings[name] === value ? "" : value;
       chrome.storage.sync.set(newSettings, function () {
         secondAndThirdCheckboxes();
         execute();
