@@ -41,7 +41,7 @@ CFFVK = CFFVK || (function () {
   }
 
   // Do things with the second and the third checkboxes:
-  function secondAndThirdCheckboxes() {
+  function hideOrShowCheckboxes2and3() {
     chrome.storage.sync.get(null, function (settings) {
       var form = document.settingsForm,
         newSettings = {},
@@ -73,7 +73,7 @@ CFFVK = CFFVK || (function () {
 
   // Catch clicks on checkboxes and remember the values ("checked"),
   // reapply the main function:
-  function clickHandler(event) {
+  function handleClick(event) {
     var name = event.target.name,
       value = event.target.value,
       newSettings = {};
@@ -81,7 +81,7 @@ CFFVK = CFFVK || (function () {
     chrome.storage.sync.get(name, function (settings) {
       newSettings[name] = settings[name] === value ? "" : value;
       chrome.storage.sync.set(newSettings, function () {
-        secondAndThirdCheckboxes();
+        hideOrShowCheckboxes2and3();
         execute();
       });
     });
@@ -151,19 +151,19 @@ CFFVK = CFFVK || (function () {
       }
     },
 
-    init: function init() {
+    setUpTheSettingsPage: function setUpTheSettingsPage() {
       var form = document.settingsForm,
         checkbox,
         i;
 
       if (form) {
-        secondAndThirdCheckboxes();
+        hideOrShowCheckboxes2and3();
 
         form = form.getElementsByTagName("input");
         chrome.storage.sync.get(null, function (settings) {
           for (i = 0; i < form.length; i += 1) {
             checkbox = form[i];
-            checkbox.addEventListener("click", clickHandler);
+            checkbox.addEventListener("click", handleClick);
             if (settings[checkbox.name] === "checked") {
               checkbox.checked = true;
             }
@@ -174,6 +174,6 @@ CFFVK = CFFVK || (function () {
   };
 }());
 
-CFFVK.init();
+CFFVK.setUpTheSettingsPage();
 
 chrome.tabs.onUpdated.addListener(CFFVK.checkForValidUrl);
