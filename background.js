@@ -6,22 +6,6 @@ var CFFVK;
 CFFVK = CFFVK || (function () {
   "use strict";
 
-  // For older versions: convert localStorage to chrome.storage.sync
-  function upgradeStorage() {
-    var newSettings = {},
-      key,
-      i;
-
-    for (i = 0; i < localStorage.length; i += 1) {
-      key = localStorage.key(i);
-      newSettings[key] = localStorage[key];
-    }
-
-    chrome.storage.sync.set(newSettings, function () {
-      localStorage.clear();
-    });
-  }
-
   // The main function
   function execute(tabId) {
     chrome.storage.sync.get(null, function (settings) {
@@ -103,8 +87,22 @@ CFFVK = CFFVK || (function () {
     });
   }
 
+  // For older versions: convert localStorage to chrome.storage.sync
   if (localStorage.length > 0) {
-    upgradeStorage();
+    (function upgradeStorage() {
+      var newSettings = {},
+        key,
+        i;
+
+      for (i = 0; i < localStorage.length; i += 1) {
+        key = localStorage.key(i);
+        newSettings[key] = localStorage[key];
+      }
+
+      chrome.storage.sync.set(newSettings, function () {
+        localStorage.clear();
+      });
+    }());
   }
 
   // If there is no saved settings then set them to defaults
