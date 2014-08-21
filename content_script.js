@@ -7,19 +7,19 @@ CFFVK = CFFVK || (function () {
 
   var settings;
 
-  function processFeedItem(elem, setting, className) {
+  function processFeedItem(elem, setting, newClassName) {
     var parent = elem.parentNode;
 
     while (parent !== CFFVK.feed) {
       if (parent.className.indexOf('feed_row') > -1) {
         if (setting === 'checked') {
-          if (parent.className.indexOf(className) === -1) {
-            parent.className += className;
+          if (parent.className.indexOf(newClassName) === -1) {
+            parent.className += newClassName;
           }
           return;
         }
-        className = new RegExp(className, 'g');
-        parent.className = parent.className.replace(className, '');
+        newClassName = new RegExp(newClassName, 'g');
+        parent.className = parent.className.replace(newClassName, '');
         return;
       }
       parent = parent.parentNode;
