@@ -5,6 +5,8 @@ var CFFVK;
 CFFVK = CFFVK || (function () {
   'use strict';
 
+  var settings;
+
   function processFeedItem(elem, setting, className) {
     var parent = elem.parentNode;
 
@@ -41,16 +43,14 @@ CFFVK = CFFVK || (function () {
   }
 
   return {
-    clean: function clean(settings) {
+    clean: function clean(receivedSettings) {
       var els = CFFVK.feed.getElementsByTagName('a'),
         l = els.length,
         i,
         el;
 
-      if (settings) {
-        CFFVK.settings = settings;
-      } else {
-        settings = CFFVK.settings;
+      if (receivedSettings) {
+        settings = receivedSettings;
       }
 
       for (i = 0; i < l; i += 1) {
