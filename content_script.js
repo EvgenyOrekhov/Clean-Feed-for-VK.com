@@ -81,4 +81,6 @@ CFFVK = CFFVK || (function () {
 
 CFFVK.feed = document.getElementById('feed_rows');
 
-CFFVK.observer.observe(CFFVK.feed, {childList: true});
+CFFVK.observer.observe(CFFVK.feed, {
+  childList: true
+});

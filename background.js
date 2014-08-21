@@ -15,29 +15,31 @@ CFFVK = CFFVK || (function () {
     if (settings.groups === "checked") {
 
       if (settings.people === "checked") {
-        cssCode += "div[class^='feed_repost'] {display: none;}";
+        cssCode += "div[class^='feed_repost'] { display: none; }";
       } else {
         cssCode +=
-          "div[class^='feed_repost'] {display: block;}" +
+          "div[class^='feed_repost'] { display: block; }" +
           "div[class^='feed_repost-']," +
-          "div[class^='feed_reposts_'] {display: none;}";
+          "div[class^='feed_reposts_'] { display: none; }";
       }
 
       if (settings.mygroups === "checked") {
-        cssCode += "div[id^=post-].post_copy {display: none;}";
+        cssCode += "div[id^=post-].post_copy { display: none; }";
       } else {
-        cssCode += "div[id^=post-].post_copy {display: block;}";
+        cssCode += "div[id^=post-].post_copy { display: block; }";
       }
 
     } else {
       cssCode += "div[class^='feed_repost']," +
-        "div[id^=post-].post_copy {display: block;}";
+        "div[id^=post-].post_copy { display: block; }";
     }
 
-    chrome.tabs.insertCSS(tabId, {code: cssCode});
-    chrome.tabs.executeScript(tabId, {code:
-      "CFFVK.clean(" + JSON.stringify(settings) + ");"
-      });
+    chrome.tabs.insertCSS(tabId, {
+      code: cssCode
+    });
+    chrome.tabs.executeScript(tabId, {
+      code: "CFFVK.clean(" + JSON.stringify(settings) + ");"
+    });
   }
 
   // Do things with the second and the third checkboxes:
@@ -142,7 +144,20 @@ CFFVK = CFFVK || (function () {
     // Launch the main function only on certain pages of VK:
     checkForValidUrl: function checkForValidUrl(tabId, changeInfo, tab) {
       if (changeInfo.status === "loading") {
-        var url = tab.url;
+        var url = tab.url,
+
+          // divs with these classes will be hidden:
+          cssCode =
+            ".cffvk-groups," +
+            ".cffvk-people," +
+            ".cffvk-mygroups," +
+            ".cffvk-links," +
+            ".cffvk-group_share," +
+            ".cffvk-event_share," +
+            ".cffvk-wall_post_source_default," +
+            ".cffvk-wall_post_more," +
+            ".cffvk-post_like_icon," +
+            ".cffvk-reply_link";
 
         if (url.indexOf("vk.com/feed") > -1) {
           if (!/photos|articles|likes|notifications|comments|updates|replies/
@@ -150,26 +165,31 @@ CFFVK = CFFVK || (function () {
             if (!/\/feed\?[wz]=/.test(url)) {
               chrome.pageAction.show(tabId);
 
-              // divs with these classes will be hidden:
-              chrome.tabs.insertCSS(tabId, {code:
-                ".cffvk-groups, .cffvk-people, .cffvk-mygroups, .cffvk-links, .cffvk-group_share, .cffvk-event_share, .cffvk-wall_post_source_default, .cffvk-wall_post_more, .cffvk-post_like_icon, .cffvk-reply_link {display: none;}"
-                });
+              chrome.tabs.insertCSS(tabId, {
+                code: cssCode + "{ display: none; }"
+              });
 
-              chrome.tabs.executeScript(tabId, {file: "content_script.js"});
+              chrome.tabs.executeScript(tabId, {
+                file: "content_script.js"
+              });
               execute(tabId);
             }
           } else {
 
             // Show all the divs that have been hidden, stop observing:
-            chrome.tabs.insertCSS(tabId, {code:
-              "div[class^='feed_repost'], div[id^=post-].post_copy, .cffvk-groups, .cffvk-people, .cffvk-mygroups, .cffvk-links, .cffvk-group_share, .cffvk-event_share, .cffvk-wall_post_source_default, .cffvk-wall_post_more, .cffvk-post_like_icon, .cffvk-reply_link {display: block;}"
-              });
-            chrome.tabs.executeScript(tabId, {code:
-              "if (window.CFFVK && CFFVK.observer) {" +
-              "  CFFVK.observer.disconnect();" +
-              "  console.log('CFFVK: cleaning disabled');" +
-              "};"
-              });
+            chrome.tabs.insertCSS(tabId, {
+              code:
+                cssCode + "," +
+                "div[class^='feed_repost']," +
+                "div[id^=post-].post_copy { display: block; }"
+            });
+            chrome.tabs.executeScript(tabId, {
+              code:
+                "if (window.CFFVK && CFFVK.observer) {" +
+                "  CFFVK.observer.disconnect();" +
+                "  console.log('CFFVK: cleaning disabled');" +
+                "};"
+            });
           }
         }
       }
