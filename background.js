@@ -78,9 +78,10 @@ CFFVK = CFFVK || (function () {
       value = event.target.value;
 
     settings[name] = settings[name] === value ? "" : value;
-    execute();
+
     chrome.storage.sync.set(settings, function () {
       hideOrShowCheckboxes2and3();
+      execute();
     });
   }
 
@@ -163,16 +164,29 @@ CFFVK = CFFVK || (function () {
           if (!/photos|articles|likes|notifications|comments|updates|replies/
               .test(url)) {
             if (!/\/feed\?[wz]=/.test(url)) {
+
+              // We have to get the settings on every page load because
+              // `handleClick` works in a different context (popup) and it
+              // doesn't update our `settings` variable
+              chrome.storage.sync.get(null, function (loadedSettings) {
+                settings = loadedSettings;
+                chrome.tabs.executeScript(
+                  tabId,
+                  {
+                    file: "content_script.js"
+                  },
+                  function () {
+                    execute(tabId);
+                  }
+                );
+              });
+
               chrome.pageAction.show(tabId);
 
               chrome.tabs.insertCSS(tabId, {
                 code: cssCode + "{ display: none; }"
               });
 
-              chrome.tabs.executeScript(tabId, {
-                file: "content_script.js"
-              });
-              execute(tabId);
             }
           } else {
 
