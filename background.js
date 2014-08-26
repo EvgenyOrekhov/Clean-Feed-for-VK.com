@@ -189,6 +189,7 @@ CFFVK = CFFVK || (function () {
 
             }
           } else {
+            chrome.pageAction.hide(tabId);
 
             // Show all the divs that have been hidden, stop observing:
             chrome.tabs.insertCSS(tabId, {
@@ -205,6 +206,8 @@ CFFVK = CFFVK || (function () {
                 "};"
             });
           }
+        } else {
+          chrome.pageAction.hide(tabId);
         }
       }
     }
