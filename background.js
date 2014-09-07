@@ -1,9 +1,7 @@
 /*global chrome */
 /*jslint browser: true, devel: true, indent: 2 */
 
-var CFFVK;
-
-CFFVK = CFFVK || (function () {
+(function () {
   "use strict";
 
   var settings;
@@ -140,78 +138,75 @@ CFFVK = CFFVK || (function () {
     });
   }
 
-  return {
+  // Launch the main function only on certain pages of VK:
+  function checkForValidUrl(tabId, changeInfo, tab) {
+    if (changeInfo.status === "loading") {
+      var url = tab.url,
 
-    // Launch the main function only on certain pages of VK:
-    checkForValidUrl: function checkForValidUrl(tabId, changeInfo, tab) {
-      if (changeInfo.status === "loading") {
-        var url = tab.url,
+        // divs with these classes will be hidden:
+        cssCode =
+          ".cffvk-groups," +
+          ".cffvk-people," +
+          ".cffvk-mygroups," +
+          ".cffvk-links," +
+          ".cffvk-group_share," +
+          ".cffvk-event_share," +
+          ".cffvk-wall_post_source_default," +
+          ".cffvk-wall_post_more," +
+          ".cffvk-post_like_icon," +
+          ".cffvk-reply_link";
 
-          // divs with these classes will be hidden:
-          cssCode =
-            ".cffvk-groups," +
-            ".cffvk-people," +
-            ".cffvk-mygroups," +
-            ".cffvk-links," +
-            ".cffvk-group_share," +
-            ".cffvk-event_share," +
-            ".cffvk-wall_post_source_default," +
-            ".cffvk-wall_post_more," +
-            ".cffvk-post_like_icon," +
-            ".cffvk-reply_link";
+      if (url.indexOf("vk.com/feed") > -1) {
+        if (!/photos|articles|likes|notifications|comments|updates|replies/
+            .test(url)) {
+          if (!/\/feed\?[wz]=/.test(url)) {
 
-        if (url.indexOf("vk.com/feed") > -1) {
-          if (!/photos|articles|likes|notifications|comments|updates|replies/
-              .test(url)) {
-            if (!/\/feed\?[wz]=/.test(url)) {
+            // We have to get the settings on every page load because
+            // `handleClick` works in a different context (popup) and it
+            // doesn't update our `settings` variable
+            chrome.storage.sync.get(null, function (loadedSettings) {
+              settings = loadedSettings;
+              chrome.tabs.executeScript(
+                tabId,
+                {
+                  file: "content_script.js"
+                },
+                function () {
+                  execute(tabId);
+                }
+              );
+            });
 
-              // We have to get the settings on every page load because
-              // `handleClick` works in a different context (popup) and it
-              // doesn't update our `settings` variable
-              chrome.storage.sync.get(null, function (loadedSettings) {
-                settings = loadedSettings;
-                chrome.tabs.executeScript(
-                  tabId,
-                  {
-                    file: "content_script.js"
-                  },
-                  function () {
-                    execute(tabId);
-                  }
-                );
-              });
+            chrome.pageAction.show(tabId);
 
-              chrome.pageAction.show(tabId);
-
-              chrome.tabs.insertCSS(tabId, {
-                code: cssCode + "{ display: none; }"
-              });
-
-            }
-          } else {
-            chrome.pageAction.hide(tabId);
-
-            // Show all the divs that have been hidden, stop observing:
             chrome.tabs.insertCSS(tabId, {
-              code:
-                cssCode + "," +
-                "div[class^='feed_repost']," +
-                "div[id^=post-].post_copy { display: block; }"
+              code: cssCode + "{ display: none; }"
             });
-            chrome.tabs.executeScript(tabId, {
-              code:
-                "if (window.CFFVK && CFFVK.observer) {" +
-                "  CFFVK.observer.disconnect();" +
-                "  console.log('CFFVK: cleaning disabled');" +
-                "};"
-            });
+
           }
         } else {
           chrome.pageAction.hide(tabId);
+
+          // Show all the divs that have been hidden, stop observing:
+          chrome.tabs.insertCSS(tabId, {
+            code:
+              cssCode + "," +
+              "div[class^='feed_repost']," +
+              "div[id^=post-].post_copy { display: block; }"
+          });
+          chrome.tabs.executeScript(tabId, {
+            code:
+              "if (window.CFFVK && CFFVK.observer) {" +
+              "  CFFVK.observer.disconnect();" +
+              "  console.log('CFFVK: cleaning disabled');" +
+              "};"
+          });
         }
+      } else {
+        chrome.pageAction.hide(tabId);
       }
     }
-  };
-}());
+  }
 
-chrome.tabs.onUpdated.addListener(CFFVK.checkForValidUrl);
+  chrome.tabs.onUpdated.addListener(checkForValidUrl);
+}());
