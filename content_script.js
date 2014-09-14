@@ -37,15 +37,22 @@ CFFVK = CFFVK || (function () {
 
   return {
     clean: function clean(receivedSettings) {
-      var els = [].slice.call(CFFVK.feed.getElementsByTagName("a"));
+      var links = [].slice.call(CFFVK.feed.getElementsByTagName("a")),
+        mentions = [].slice.call(CFFVK.feed.getElementsByClassName("mem_link"));
 
       if (receivedSettings) {
         settings = receivedSettings;
       }
 
-      els.forEach(function (el) {
+      links.forEach(function (el) {
         if (/sprashivai\.ru|spring\.me|nekto\.me|ask\.fm/.test(el.href)) {
           processFeedItem(el, settings.links, "cffvk-links");
+        }
+      });
+
+      mentions.forEach(function (el) {
+        if (el.getAttribute("mention_id").indexOf("club") > -1) {
+          processFeedItem(el, settings.mem_link, "cffvk-mem_link");
         }
       });
 

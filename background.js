@@ -142,6 +142,7 @@
           ".cffvk-mygroups," +
           ".cffvk-links," +
           ".cffvk-group_share," +
+          ".cffvk-mem_link," +
           ".cffvk-event_share," +
           ".cffvk-wall_post_source_default," +
           ".cffvk-wall_post_more," +
