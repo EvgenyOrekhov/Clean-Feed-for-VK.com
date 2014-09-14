@@ -11,15 +11,12 @@ CFFVK = CFFVK || (function () {
     var parent = elem.parentNode;
 
     while (parent !== CFFVK.feed) {
-      if (parent.className.indexOf("feed_row") > -1) {
+      if (parent.classList.contains("feed_row")) {
         if (setting === "checked") {
-          if (parent.className.indexOf(newClassName) === -1) {
-            parent.className += newClassName;
-          }
+          parent.classList.add(newClassName);
           return;
         }
-        newClassName = new RegExp(newClassName, "g");
-        parent.className = parent.className.replace(newClassName, "");
+        parent.classList.remove(newClassName);
         return;
       }
       parent = parent.parentNode;
@@ -28,12 +25,12 @@ CFFVK = CFFVK || (function () {
 
   function find(className, setting) {
     var els = [].slice.call(CFFVK.feed.getElementsByClassName(className)),
-      newClassName = "cffvk-" + className;
+      newClassName = "cffvk-" + className.replace(/\s/g, "-");
 
     els.forEach(function (el) {
       if (!(newClassName === "cffvk-wall_post_source_default" &&
           el.href.indexOf("app3698024") > -1)) {
-        processFeedItem(el, setting, " " + newClassName);
+        processFeedItem(el, setting, newClassName);
       }
     });
   }
@@ -48,7 +45,7 @@ CFFVK = CFFVK || (function () {
 
       els.forEach(function (el) {
         if (/sprashivai\.ru|spring\.me|nekto\.me|ask\.fm/.test(el.href)) {
-          processFeedItem(el, settings.links, " cffvk-links");
+          processFeedItem(el, settings.links, "cffvk-links");
         }
       });
 

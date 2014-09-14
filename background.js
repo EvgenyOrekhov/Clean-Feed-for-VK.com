@@ -145,7 +145,7 @@
           ".cffvk-event_share," +
           ".cffvk-wall_post_source_default," +
           ".cffvk-wall_post_more," +
-          ".cffvk-post_like_icon," +
+          ".cffvk-post_like_icon-no_likes," +
           ".cffvk-reply_link";
 
       if (url.indexOf("vk.com/feed") > -1) {
