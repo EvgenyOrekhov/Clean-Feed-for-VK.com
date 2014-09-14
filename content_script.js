@@ -27,38 +27,30 @@ CFFVK = CFFVK || (function () {
   }
 
   function find(className, setting) {
-    var els = CFFVK.feed.getElementsByClassName(className),
-      l = els.length,
-      newClassName = "cffvk-" + className,
-      i,
-      el;
+    var els = [].slice.call(CFFVK.feed.getElementsByClassName(className)),
+      newClassName = "cffvk-" + className;
 
-    for (i = 0; i < l; i += 1) {
-      el = els[i];
+    els.forEach(function (el) {
       if (!(newClassName === "cffvk-wall_post_source_default" &&
           el.href.indexOf("app3698024") > -1)) {
         processFeedItem(el, setting, " " + newClassName);
       }
-    }
+    });
   }
 
   return {
     clean: function clean(receivedSettings) {
-      var els = CFFVK.feed.getElementsByTagName("a"),
-        l = els.length,
-        i,
-        el;
+      var els = [].slice.call(CFFVK.feed.getElementsByTagName("a"));
 
       if (receivedSettings) {
         settings = receivedSettings;
       }
 
-      for (i = 0; i < l; i += 1) {
-        el = els[i];
+      els.forEach(function (el) {
         if (/sprashivai\.ru|spring\.me|nekto\.me|ask\.fm/.test(el.href)) {
           processFeedItem(el, settings.links, " cffvk-links");
         }
-      }
+      });
 
       find("group_share", settings.group_share);
       find("event_share", settings.event_share);

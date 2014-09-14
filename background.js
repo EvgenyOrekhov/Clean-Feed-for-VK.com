@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  var settings;
+  var settings = {};
 
   // The main function
   function execute(tabId) {
@@ -42,27 +42,26 @@
 
   // Do things with the second and the third checkboxes:
   function hideOrShowCheckboxes2and3() {
-    var form = document.settingsForm,
-      newSettings = {},
-      label,
-      checkbox,
-      i;
+    var labels2and3 = [
+        document.settingsForm.children[2],
+        document.settingsForm.children[3]
+      ],
+      newSettings = {};
 
-    for (i = 2; i < 4; i += 1) {
-      label = form.children[i];
+    // If the first checkbox (`groups`) is unchecked
+    // then uncheck the second and the third, hide them,
+    // and reset their settings in storage:
+    labels2and3.forEach(function (label) {
+      var checkbox = label.children[0];
 
-      // If the first checkbox ("groups") is unchecked
-      // then uncheck the second and the third, hide them,
-      // and reset their settings in storage:
       if (settings.groups !== "checked") {
         label.style.display = "none";
-        checkbox = label.children[0];
         checkbox.checked = false;
         settings[checkbox.name] = newSettings[checkbox.name] = "";
       } else {
         label.style.display = "block";
       }
-    }
+    });
 
     if (Object.keys(newSettings).length > 0) {
       chrome.storage.sync.set(settings);
@@ -85,19 +84,18 @@
 
   function setUpTheSettingsPage() {
     if (document.settingsForm) {
-      var checkboxes = document.settingsForm.getElementsByTagName("input"),
-        checkbox,
-        i;
+      var checkboxes = [].slice.call(
+          document.settingsForm.getElementsByTagName("input")
+        );
 
       hideOrShowCheckboxes2and3();
 
-      for (i = 0; i < checkboxes.length; i += 1) {
-        checkbox = checkboxes[i];
+      checkboxes.forEach(function (checkbox) {
         checkbox.addEventListener("click", handleClick);
         if (settings[checkbox.name] === "checked") {
           checkbox.checked = true;
         }
-      }
+      });
     }
   }
 
@@ -105,16 +103,10 @@
 
     // For older versions: convert localStorage to chrome.storage.sync
     (function upgradeStorage() {
-      var convertedSettings = {},
-        key,
-        i;
+      Object.keys(localStorage).forEach(function (key) {
+        settings[key] = localStorage[key];
+      });
 
-      for (i = 0; i < localStorage.length; i += 1) {
-        key = localStorage.key(i);
-        convertedSettings[key] = localStorage[key];
-      }
-
-      settings = convertedSettings;
       setUpTheSettingsPage();
       chrome.storage.sync.set(settings, function () {
         localStorage.clear();
