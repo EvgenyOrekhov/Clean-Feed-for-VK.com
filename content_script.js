@@ -71,7 +71,18 @@ CFFVK = CFFVK || (function () {
         CFFVK.clean();
         console.log("       by the MutationObserver");
       }
-    })
+    }),
+
+    removeInlineStyles: function removeInlineStyles() {
+      var posts = [].slice.call(
+        CFFVK.feed.getElementsByClassName("feed_row")
+      );
+
+      posts.forEach(function (post) {
+        post.removeAttribute("style");
+      });
+      window.scrollTo(0, 0);
+    }
   };
 }());
 
@@ -80,3 +91,6 @@ CFFVK.feed = document.getElementById("feed_rows");
 CFFVK.observer.observe(CFFVK.feed, {
   childList: true
 });
+
+document.getElementById("feed_new_posts").
+  addEventListener("click", CFFVK.removeInlineStyles);
