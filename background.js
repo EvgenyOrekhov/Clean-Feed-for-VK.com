@@ -4,7 +4,25 @@
 (function () {
   "use strict";
 
-  var settings = {};
+  var settings = {},
+    css = {
+      groups: "[id^='feed_repost-'], [id^='feed_reposts_'] { display: none; }",
+      myGroups: "[id^='post-'].post_copy { display: none; }",
+      groupsAndPeople: "[id^='feed_repost'] { display: none; }",
+      filters: [
+        ".cffvk-links",
+        ".cffvk-wall_post_source_default",
+        ".cffvk-group_share",
+        ".cffvk-mem_link",
+        ".cffvk-event_share",
+        ".cffvk-wall_post_more",
+        ".cffvk-post_like_icon-no_likes",
+        ".cffvk-reply_link"
+      ].join() + "{ display: none; }",
+      show: function show(rule) {
+        return rule.replace(/none/g, "block");
+      }
+    };
 
   // The main function
   function execute(tabId) {
@@ -13,23 +31,19 @@
     if (settings.groups === "checked") {
 
       if (settings.people === "checked") {
-        cssCode += "div[class^='feed_repost'] { display: none; }";
+        cssCode += css.groupsAndPeople;
       } else {
-        cssCode +=
-          "div[class^='feed_repost'] { display: block; }" +
-          "div[class^='feed_repost-']," +
-          "div[class^='feed_reposts_'] { display: none; }";
+        cssCode += css.show(css.groupsAndPeople) + css.groups;
       }
 
       if (settings.mygroups === "checked") {
-        cssCode += "div[id^=post-].post_copy { display: none; }";
+        cssCode += css.myGroups;
       } else {
-        cssCode += "div[id^=post-].post_copy { display: block; }";
+        cssCode += css.show(css.myGroups);
       }
 
     } else {
-      cssCode += "div[class^='feed_repost']," +
-        "div[id^=post-].post_copy { display: block; }";
+      cssCode += css.show(css.groupsAndPeople + css.myGroups);
     }
 
     chrome.tabs.insertCSS(tabId, {
@@ -133,21 +147,7 @@
   // Launch the main function only on certain pages of VK:
   function checkForValidUrl(tabId, changeInfo, tab) {
     if (changeInfo.status === "loading") {
-      var url = tab.url,
-
-        // divs with these classes will be hidden:
-        cssCode =
-          ".cffvk-groups," +
-          ".cffvk-people," +
-          ".cffvk-mygroups," +
-          ".cffvk-links," +
-          ".cffvk-group_share," +
-          ".cffvk-mem_link," +
-          ".cffvk-event_share," +
-          ".cffvk-wall_post_source_default," +
-          ".cffvk-wall_post_more," +
-          ".cffvk-post_like_icon-no_likes," +
-          ".cffvk-reply_link";
+      var url = tab.url;
 
       if (url.indexOf("vk.com/feed") > -1) {
         if (!/photos|articles|likes|notifications|comments|updates|replies/
@@ -173,7 +173,7 @@
             chrome.pageAction.show(tabId);
 
             chrome.tabs.insertCSS(tabId, {
-              code: cssCode + "{ display: none; }"
+              code: css.filters
             });
 
           }
@@ -182,10 +182,7 @@
 
           // Show all the divs that have been hidden, stop observing:
           chrome.tabs.insertCSS(tabId, {
-            code:
-              cssCode + "," +
-              "div[class^='feed_repost']," +
-              "div[id^=post-].post_copy { display: block; }"
+            code: css.show(css.groupsAndPeople + css.myGroups + css.filters)
           });
           chrome.tabs.executeScript(tabId, {
             code:
