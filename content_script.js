@@ -81,7 +81,7 @@ CFFVK = CFFVK || (function () {
       posts.forEach(function (post) {
         post.removeAttribute("style");
       });
-      window.scrollTo(0, 0);
+      window.scroll(0, 0);
     }
   };
 }());
