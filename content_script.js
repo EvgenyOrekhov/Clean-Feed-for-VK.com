@@ -56,9 +56,9 @@ CFFVK = CFFVK || (function () {
         }
       });
 
+      find("wall_post_source_default", settings.apps);
       find("group_share", settings.group_share);
       find("event_share", settings.event_share);
-      find("wall_post_source_default", settings.apps);
       find("wall_post_more", settings.wall_post_more);
       find("post_like_icon no_likes", settings.likes);
       find("reply_link", settings.comments);
