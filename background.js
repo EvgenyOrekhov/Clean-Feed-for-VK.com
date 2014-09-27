@@ -164,15 +164,13 @@
   if (localStorage.length > 0) {
 
     // For older versions: convert localStorage to chrome.storage.sync
-    (function upgradeStorage() {
-      Object.keys(localStorage).forEach(function (key) {
-        settings[key] = localStorage[key];
-      });
-      setUpTheSettingsPage();
-      chrome.storage.sync.set(settings, function () {
-        localStorage.clear();
-      });
-    }());
+    Object.keys(localStorage).forEach(function (key) {
+      settings[key] = localStorage[key];
+    });
+    setUpTheSettingsPage();
+    chrome.storage.sync.set(settings, function () {
+      localStorage.clear();
+    });
   } else {
 
     // Load settings. If there are none, set them to defaults
