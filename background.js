@@ -129,7 +129,7 @@
               settings = loadedSettings;
               chrome.tabs.executeScript(
                 tabId,
-                {file: "content_script.js"},
+                {file: "content-script.js"},
                 function () {
                   execute(tabId);
                 }
