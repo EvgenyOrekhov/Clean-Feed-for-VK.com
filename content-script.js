@@ -28,10 +28,7 @@ CFFVK = CFFVK || (function () {
       newClassName = "cffvk-" + className.replace(/\s/g, "-");
 
     els.forEach(function (el) {
-      if (!(newClassName === "cffvk-wall_post_source_default" &&
-          el.href.indexOf("app3698024") > -1)) {
-        processFeedItem(el, setting, newClassName);
-      }
+      processFeedItem(el, setting, newClassName);
     });
   }
 
