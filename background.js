@@ -19,6 +19,7 @@
         ".cffvk-post_like_icon-no_likes",
         ".cffvk-reply_link"
       ].join() + "{ display: none; }",
+
       show: function show(rule) {
         return rule.replace(/none/g, "block");
       }
@@ -130,9 +131,7 @@
               chrome.tabs.executeScript(
                 tabId,
                 {file: "content-script.js"},
-                function () {
-                  execute(tabId);
-                }
+                function () { execute(tabId); }
               );
             });
 
@@ -167,7 +166,9 @@
     Object.keys(localStorage).forEach(function (key) {
       settings[key] = localStorage[key];
     });
+
     setUpTheSettingsPage();
+
     chrome.storage.sync.set(settings, function () {
       localStorage.clear();
     });
