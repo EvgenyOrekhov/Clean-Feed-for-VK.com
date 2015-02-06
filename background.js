@@ -126,7 +126,7 @@
             // We have to get the settings on every page load because
             // `handleClick` works in a different context (popup) and it
             // doesn't update our `settings` variable
-            chrome.storage.sync.get(null, function (loadedSettings) {
+            chrome.storage.sync.get(function (loadedSettings) {
               settings = loadedSettings;
               chrome.tabs.executeScript(
                 tabId,
@@ -162,7 +162,7 @@
 
   // Load settings. If there are none, set them to defaults
   // (check only the first checkbox):
-  chrome.storage.sync.get(null, function (loadedSettings) {
+  chrome.storage.sync.get(function (loadedSettings) {
     if (Object.keys(loadedSettings).length === 0) {
       settings = {groups: "checked"};
       chrome.storage.sync.set(settings);
