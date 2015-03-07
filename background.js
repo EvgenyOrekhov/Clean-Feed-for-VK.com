@@ -5,20 +5,21 @@
   "use strict";
 
   var settings = {},
+    classes = [
+      ".cffvk-links",
+      ".cffvk-wall_post_source_default",
+      ".cffvk-group_share",
+      ".cffvk-mem_link",
+      ".cffvk-event_share",
+      ".cffvk-wall_post_more",
+      ".cffvk-post_like_icon-no_likes",
+      ".cffvk-reply_link"
+    ],
     css = {
       groups: "[id^='feed_repost-'], [id^='feed_reposts_'] { display: none; }",
       myGroups: "[id^='post-'].post_copy { display: none; }",
       groupsAndPeople: "[id^='feed_repost'] { display: none; }",
-      filters: [
-        ".cffvk-links",
-        ".cffvk-wall_post_source_default",
-        ".cffvk-group_share",
-        ".cffvk-mem_link",
-        ".cffvk-event_share",
-        ".cffvk-wall_post_more",
-        ".cffvk-post_like_icon-no_likes",
-        ".cffvk-reply_link"
-      ].join() + "{ display: none; }",
+      filters: classes.join() + "{ display: none; }",
 
       show: function show(rule) {
         return rule.replace(/none/g, "block");
@@ -72,7 +73,8 @@
         if (settings.groups !== "checked") {
           label.style.display = "none";
           checkbox.checked = false;
-          settings[checkbox.name] = newSettings[checkbox.name] = "";
+          newSettings[checkbox.name] = "";
+          settings[checkbox.name] = "";
         } else {
           label.style.display = "block";
         }
@@ -98,7 +100,7 @@
     }
 
     if (document.settingsForm) {
-      var checkboxes = [].slice.call(
+      var checkboxes = Array.prototype.slice.call(
           document.settingsForm.getElementsByTagName("input")
         );
 
@@ -119,9 +121,9 @@
       var url = tab.url;
 
       if (url.indexOf("vk.com/feed") > -1) {
-        if (!/photos|articles|likes|notifications|comments|updates|replies/
+        if (!(/photos|articles|likes|notifications|comments|updates|replies/)
             .test(url)) {
-          if (!/\/feed\?[wz]=/.test(url)) {
+          if (!(/\/feed\?[wz]=/).test(url)) {
 
             // We have to get the settings on every page load because
             // `handleClick` works in a different context (popup) and it

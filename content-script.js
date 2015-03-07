@@ -24,7 +24,9 @@ CFFVK = CFFVK || (function () {
   }
 
   function find(className, setting) {
-    var els = [].slice.call(CFFVK.feed.getElementsByClassName(className)),
+    var els = Array.prototype.slice.call(
+        CFFVK.feed.getElementsByClassName(className)
+      ),
       newClassName = "cffvk-" + className.replace(/\s/g, "-");
 
     els.forEach(function (el) {
@@ -34,8 +36,12 @@ CFFVK = CFFVK || (function () {
 
   return {
     clean: function clean(receivedSettings) {
-      var links = [].slice.call(CFFVK.feed.getElementsByTagName("a")),
-        mentions = [].slice.call(CFFVK.feed.getElementsByClassName("mem_link"));
+      var links = Array.prototype.slice.call(
+          CFFVK.feed.getElementsByTagName("a")
+        ),
+        mentions = Array.prototype.slice.call(
+          CFFVK.feed.getElementsByClassName("mem_link")
+        );
 
       if (receivedSettings) {
         settings = receivedSettings;
@@ -71,7 +77,7 @@ CFFVK = CFFVK || (function () {
     }),
 
     removeInlineStyles: function removeInlineStyles() {
-      var posts = [].slice.call(
+      var posts = Array.prototype.slice.call(
         CFFVK.feed.getElementsByClassName("feed_row")
       );
 
