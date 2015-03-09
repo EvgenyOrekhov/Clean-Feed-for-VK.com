@@ -5,7 +5,15 @@ var CFFVK;
 CFFVK = CFFVK || (function () {
   "use strict";
 
-  var settings;
+  var classNamesToFind = {
+      apps: "wall_post_source_default",
+      group_share: "group_share",
+      event_share: "event_share",
+      wall_post_more: "wall_post_more",
+      likes: "post_like_icon no_likes",
+      comments: "reply_link"
+    },
+    settings;
 
   function processFeedItem(elem, setting, newClassName) {
     var parent = elem.parentNode;
@@ -23,14 +31,15 @@ CFFVK = CFFVK || (function () {
     }
   }
 
-  function find(className, setting) {
-    var els = Array.prototype.slice.call(
+  function find(settingName) {
+    var className = classNamesToFind[settingName],
+      els = Array.prototype.slice.call(
         CFFVK.feed.getElementsByClassName(className)
       ),
       newClassName = "cffvk-" + className.replace(/\s/g, "-");
 
     els.forEach(function (el) {
-      processFeedItem(el, setting, newClassName);
+      processFeedItem(el, settings[settingName], newClassName);
     });
   }
 
@@ -59,12 +68,7 @@ CFFVK = CFFVK || (function () {
         }
       });
 
-      find("wall_post_source_default", settings.apps);
-      find("group_share", settings.group_share);
-      find("event_share", settings.event_share);
-      find("wall_post_more", settings.wall_post_more);
-      find("post_like_icon no_likes", settings.likes);
-      find("reply_link", settings.comments);
+      Object.keys(classNamesToFind).forEach(find);
 
       console.log("CFFVK: your feed has been cleaned");
     },
