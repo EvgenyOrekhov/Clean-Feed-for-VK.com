@@ -1,11 +1,11 @@
-/*global chrome */
 /*jslint browser: true, devel: true, indent: 2 */
+
+var chrome;
 
 (function () {
   "use strict";
 
-  var settings = {},
-    classes = [
+  var classes = [
       ".cffvk-links",
       ".cffvk-wall_post_source_default",
       ".cffvk-group_share",
@@ -24,7 +24,8 @@
       show: function show(rule) {
         return rule.replace(/none/g, "block");
       }
-    };
+    },
+    settings = {};
 
   // The main function
   function execute(tabId) {
@@ -55,6 +56,7 @@
   }
 
   function setUpTheSettingsPage() {
+    var checkboxes;
 
     // Do things with the second and the third checkboxes:
     function hideOrShowCheckboxes2and3() {
@@ -100,9 +102,9 @@
     }
 
     if (document.settingsForm) {
-      var checkboxes = Array.prototype.slice.call(
-          document.settingsForm.getElementsByTagName("input")
-        );
+      checkboxes = Array.prototype.slice.call(
+        document.settingsForm.getElementsByTagName("input")
+      );
 
       hideOrShowCheckboxes2and3();
 
@@ -117,8 +119,10 @@
 
   // Launch the main function only on certain pages of VK:
   function checkForValidUrl(tabId, changeInfo, tab) {
+    var url;
+
     if (changeInfo.status === "loading") {
-      var url = tab.url;
+      url = tab.url;
 
       if (url.indexOf("vk.com/feed") > -1) {
         if (!(/photos|articles|likes|notifications|comments|updates|replies/)
@@ -133,7 +137,9 @@
               chrome.tabs.executeScript(
                 tabId,
                 {file: "content-script.js"},
-                function () { execute(tabId); }
+                function () {
+                  execute(tabId);
+                }
               );
             });
 
