@@ -5,13 +5,22 @@ var CFFVK;
 CFFVK = CFFVK || (function () {
   "use strict";
 
-  var classNamesToFind = {
-      apps: "wall_post_source_default",
-      group_share: "group_share",
-      event_share: "event_share",
-      wall_post_more: "wall_post_more",
-      likes: "post_like_icon no_likes",
-      comments: "reply_link"
+  var qAndALinksSelectors = [
+      "[href*='sprashivai.ru']",
+      "[href*='spring.me']",
+      "[href*='nekto.me']",
+      "[href*='ask.fm']"
+    ],
+    selectorsToFind = {
+      links: qAndALinksSelectors.join(","),
+      apps: ".wall_post_source_default",
+      group_share: ".group_share",
+      mem_link: ".mem_link[mention_id^='club']",
+      event_share: ".event_share",
+      external_links: "a[href^='/away.php?to=']:not(.wall_post_source_icon)",
+      wall_post_more: ".wall_post_more",
+      likes: ".post_like_icon.no_likes",
+      comments: ".reply_link"
     },
     settings;
 
@@ -32,11 +41,11 @@ CFFVK = CFFVK || (function () {
   }
 
   function find(settingName) {
-    var className = classNamesToFind[settingName],
+    var selector = selectorsToFind[settingName],
       els = Array.prototype.slice.call(
-        CFFVK.feed.getElementsByClassName(className)
+        CFFVK.feed.querySelectorAll(selector)
       ),
-      newClassName = "cffvk-" + className.replace(/\s/g, "-");
+      newClassName = "cffvk-" + settingName;
 
     els.forEach(function (el) {
       processFeedItem(el, settings[settingName], newClassName);
@@ -45,34 +54,10 @@ CFFVK = CFFVK || (function () {
 
   return {
     clean: function clean(receivedSettings) {
-      var links = Array.prototype.slice.call(
-          CFFVK.feed.querySelectorAll(
-            "a[href^='/away.php?to=']:not(.wall_post_source_icon)"
-          )
-        ),
-        mentions = Array.prototype.slice.call(
-          CFFVK.feed.getElementsByClassName("mem_link")
-        );
-
       if (receivedSettings) {
         settings = receivedSettings;
       }
-
-      links.forEach(function (el) {
-        processFeedItem(el, settings.external_links, "cffvk-external-links");
-        if (/sprashivai\.ru|spring\.me|nekto\.me|ask\.fm/.test(el.href)) {
-          processFeedItem(el, settings.links, "cffvk-links");
-        }
-      });
-
-      mentions.forEach(function (el) {
-        if (el.getAttribute("mention_id").indexOf("club") > -1) {
-          processFeedItem(el, settings.mem_link, "cffvk-mem_link");
-        }
-      });
-
-      Object.keys(classNamesToFind).forEach(find);
-
+      Object.keys(selectorsToFind).forEach(find);
       console.log("CFFVK: your feed has been cleaned");
     },
 

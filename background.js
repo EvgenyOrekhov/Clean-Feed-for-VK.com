@@ -7,14 +7,14 @@ var chrome;
 
   var classes = [
       ".cffvk-links",
-      ".cffvk-wall_post_source_default",
+      ".cffvk-apps",
       ".cffvk-group_share",
       ".cffvk-mem_link",
       ".cffvk-event_share",
-      ".cffvk-external-links",
+      ".cffvk-external_links",
       ".cffvk-wall_post_more",
-      ".cffvk-post_like_icon-no_likes",
-      ".cffvk-reply_link"
+      ".cffvk-likes",
+      ".cffvk-comments"
     ],
     css = {
       groups: "[id^='feed_repost-'], [id^='feed_reposts_'] { display: none; }",
