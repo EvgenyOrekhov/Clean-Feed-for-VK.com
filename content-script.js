@@ -46,7 +46,9 @@ CFFVK = CFFVK || (function () {
   return {
     clean: function clean(receivedSettings) {
       var links = Array.prototype.slice.call(
-          CFFVK.feed.getElementsByTagName("a")
+          CFFVK.feed.querySelectorAll(
+            "a[href^='/away.php?to=']:not(.wall_post_source_icon)"
+          )
         ),
         mentions = Array.prototype.slice.call(
           CFFVK.feed.getElementsByClassName("mem_link")
@@ -57,6 +59,7 @@ CFFVK = CFFVK || (function () {
       }
 
       links.forEach(function (el) {
+        processFeedItem(el, settings.external_links, "cffvk-external-links");
         if (/sprashivai\.ru|spring\.me|nekto\.me|ask\.fm/.test(el.href)) {
           processFeedItem(el, settings.links, "cffvk-links");
         }

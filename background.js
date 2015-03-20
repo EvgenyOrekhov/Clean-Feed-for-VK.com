@@ -11,6 +11,7 @@ var chrome;
       ".cffvk-group_share",
       ".cffvk-mem_link",
       ".cffvk-event_share",
+      ".cffvk-external-links",
       ".cffvk-wall_post_more",
       ".cffvk-post_like_icon-no_likes",
       ".cffvk-reply_link"
