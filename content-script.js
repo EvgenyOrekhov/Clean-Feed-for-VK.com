@@ -5,14 +5,31 @@ var CFFVK;
 CFFVK = CFFVK || (function () {
   "use strict";
 
-  var qAndALinksSelectors = [
-      "[href*='sprashivai.ru']",
-      "[href*='spring.me']",
-      "[href*='nekto.me']",
-      "[href*='ask.fm']"
+  var qAndALinks = [
+      "ask.fm",
+      "askbook.me",
+      "askfm.im",
+      "askfm.su",
+      "askmes.ru",
+      "askzone.su",
+      "my-truth.ru",
+      "nekto.me",
+      "otvechayu.ru",
+      "qroom.ru",
+      "sprashivai.by",
+      "sprashivai.ru",
+      "sprashivaii.ru",
+      "sprashivalka.com",
+      "spring.me",
+      "sprosimenya.com",
+      "sprosi.name",
+      "vopros.me",
+      "voprosmne.ru"
     ],
     selectorsToFind = {
-      links: qAndALinksSelectors.join(","),
+      links: qAndALinks.map(function (qAndALink) {
+        return "[href*='" + qAndALink + "']";
+      }).join(","),
       apps: ".wall_post_source_default",
       group_share: ".group_share",
       mem_link: ".mem_link[mention_id^='club']",
