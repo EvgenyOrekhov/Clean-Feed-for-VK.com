@@ -27,9 +27,11 @@ CFFVK = CFFVK || (function () {
       "voprosmne.ru"
     ],
     selectorsToFind = {
+
       links: qAndALinks.map(function (qAndALink) {
         return "[href*='" + qAndALink + "']";
       }).join(","),
+
       apps: ".wall_post_source_default",
       group_share: ".group_share",
       mem_link: ".mem_link[mention_id^='club']",

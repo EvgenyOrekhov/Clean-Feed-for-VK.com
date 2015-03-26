@@ -60,11 +60,13 @@ var chrome;
     var checkboxes;
 
     // Do things with the second and the third checkboxes:
-    function hideOrShowCheckboxes2and3() {
+    function hideOrShowSomeCheckboxes() {
       var labels2and3 = [
-          document.settingsForm.children[2],
-          document.settingsForm.children[3]
+          document.getElementById("mygroups-label"),
+          document.getElementById("people-label")
         ],
+        linksLabel = document.getElementById("links-label"),
+        linksCheckbox = linksLabel.children[0],
         newSettings = {};
 
       // If the first checkbox (`groups`) is unchecked
@@ -83,6 +85,18 @@ var chrome;
         }
       });
 
+      // If the `external_links` checkbox is checked
+      // then uncheck the `links` checkbox, hide it,
+      // and reset its setting in storage:
+      if (settings.external_links === "checked") {
+        linksLabel.style.display = "none";
+        linksCheckbox.checked = false;
+        newSettings[linksCheckbox.name] = "";
+        settings[linksCheckbox.name] = "";
+      } else {
+        linksLabel.style.display = "block";
+      }
+
       if (Object.keys(newSettings).length > 0) {
         chrome.storage.sync.set(settings);
       }
@@ -97,7 +111,7 @@ var chrome;
       settings[name] = settings[name] === value ? "" : value;
 
       chrome.storage.sync.set(settings, function () {
-        hideOrShowCheckboxes2and3();
+        hideOrShowSomeCheckboxes();
         execute();
       });
     }
@@ -107,7 +121,7 @@ var chrome;
         document.settingsForm.getElementsByTagName("input")
       );
 
-      hideOrShowCheckboxes2and3();
+      hideOrShowSomeCheckboxes();
 
       checkboxes.forEach(function (checkbox) {
         checkbox.addEventListener("click", handleClick);
