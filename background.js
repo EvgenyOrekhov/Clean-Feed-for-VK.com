@@ -5,22 +5,25 @@ var chrome;
 (function () {
   "use strict";
 
-  var classes = [
-      ".cffvk-links",
-      ".cffvk-apps",
-      ".cffvk-group_share",
-      ".cffvk-mem_link",
-      ".cffvk-event_share",
-      ".cffvk-external_links",
-      ".cffvk-wall_post_more",
-      ".cffvk-likes",
-      ".cffvk-comments"
+  var classNames = [
+      "external_links",
+      "links",
+      "apps",
+      "group_share",
+      "mem_link",
+      "event_share",
+      "wall_post_more",
+      "likes",
+      "comments"
     ],
     css = {
       groups: "[id^='feed_repost-'], [id^='feed_reposts_'] { display: none; }",
       myGroups: "[id^='post-'].post_copy { display: none; }",
       groupsAndPeople: "[id^='feed_repost'] { display: none; }",
-      filters: classes.join() + "{ display: none; }",
+
+      filters: classNames.map(function (className) {
+        return ".cffvk-" + className;
+      }).join() + "{ display: none; }",
 
       show: function show(rule) {
         return rule.replace(/none/g, "block");
@@ -59,7 +62,6 @@ var chrome;
   function setUpTheSettingsPage() {
     var checkboxes;
 
-    // Do things with the second and the third checkboxes:
     function hideOrShowSomeCheckboxes() {
       var labels2and3 = [
           document.getElementById("mygroups-label"),
