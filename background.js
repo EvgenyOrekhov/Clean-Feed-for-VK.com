@@ -9,6 +9,7 @@ var chrome;
             "external_links",
             "links",
             "apps",
+            "instagram",
             "group_share",
             "mem_link",
             "event_share",

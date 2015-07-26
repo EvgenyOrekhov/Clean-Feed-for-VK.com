@@ -34,6 +34,7 @@ CFFVK = CFFVK || (function () {
             }).join(","),
 
             apps: ".wall_post_source_default",
+            instagram: ".wall_post_source_instagram",
             group_share: ".group_share",
             mem_link: ".mem_link[mention_id^='club']",
             event_share: ".event_share",
