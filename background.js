@@ -1,6 +1,5 @@
+/*global chrome */
 /*jslint browser: true, devel: true */
-
-var chrome;
 
 (function () {
     "use strict";
@@ -56,8 +55,9 @@ var chrome;
         }
 
         chrome.tabs.insertCSS(tabId, {code: cssCode});
-        chrome.tabs.executeScript(tabId, {
-            code: "CFFVK.clean(" + JSON.stringify(settings) + ");"
+        chrome.tabs.sendMessage(tabId, {
+            action: "clean",
+            settings: settings
         });
     }
 
@@ -118,7 +118,15 @@ var chrome;
 
             chrome.storage.sync.set(settings, function () {
                 hideOrShowSomeCheckboxes();
-                execute();
+                chrome.tabs.query(
+                    {
+                        active: true,
+                        currentWindow: true
+                    },
+                    function (tabs) {
+                        execute(tabs[0].id);
+                    }
+                );
             });
         }
 
@@ -177,12 +185,8 @@ var chrome;
                             css.groupsAndPeople + css.myGroups + css.filters
                         )
                     });
-                    chrome.tabs.executeScript(tabId, {
-                        code:
-                                "if (window.CFFVK && CFFVK.observer) {" +
-                                "    CFFVK.observer.disconnect();" +
-                                "    console.log('CFFVK: cleaning disabled');" +
-                                "};"
+                    chrome.tabs.sendMessage(tabId, {
+                        action: "disable"
                     });
                 }
             } else {

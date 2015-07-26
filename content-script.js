@@ -1,4 +1,4 @@
-/*global MutationObserver, scroll */
+/*global MutationObserver, scroll, chrome */
 /*jslint browser: true, devel: true */
 
 var CFFVK;
@@ -110,3 +110,16 @@ CFFVK.observer.observe(CFFVK.feed, {childList: true});
 
 document.getElementById("feed_new_posts").
         addEventListener("click", CFFVK.removeInlineStyles);
+
+chrome.runtime.onMessage.addListener(
+    function (message) {
+        "use strict";
+
+        if (message.action === "clean") {
+            CFFVK.clean(message.settings);
+        } else if (message.action === "disable") {
+            CFFVK.observer.disconnect();
+            console.log("CFFVK: cleaning disabled");
+        }
+    }
+);
