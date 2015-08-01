@@ -81,12 +81,14 @@
 
                 if (settings.groups === "checked") {
                     label.style.display = "block";
-                } else {
-                    label.style.display = "none";
-                    checkbox.checked = false;
-                    newSettings[checkbox.name] = "";
-                    settings[checkbox.name] = "";
+
+                    return;
                 }
+
+                label.style.display = "none";
+                checkbox.checked = false;
+                newSettings[checkbox.name] = "";
+                settings[checkbox.name] = "";
             });
 
             // If the `external_links` checkbox is checked
@@ -150,46 +152,54 @@
     function checkForValidUrl(tabId, changeInfo, tab) {
         var url;
 
-        if (changeInfo.status === "loading") {
-            url = tab.url;
+        if (changeInfo.status !== "loading") {
+            return;
+        }
 
-            if (url.indexOf("vk.com/feed") > -1) {
-                if (/photos|videos|articles|likes|notifications|comments|updates|replies/
-                    .test(url)) {
-                    chrome.pageAction.hide(tabId);
+        url = tab.url;
 
-                    // Show all the divs that have been hidden, stop observing:
-                    chrome.tabs.insertCSS(tabId, {
-                        code: css.show(
-                            css.groupsAndPeople + css.myGroups + css.filters
-                        )
-                    });
-                    chrome.tabs.sendMessage(tabId, {
-                        action: "disable"
-                    });
-                } else if (!(/\/feed\?[wz]=/).test(url)) {
+        if (url.indexOf("vk.com/feed") === -1) {
+            chrome.pageAction.hide(tabId);
 
-                    // We have to get the settings on every page load
-                    // because `handleClick` works in a different context
-                    // (popup) and it doesn't update our `settings` variable
-                    chrome.storage.sync.get(function (loadedSettings) {
-                        settings = loadedSettings;
-                        chrome.tabs.executeScript(
-                            tabId,
-                            {file: "content-script.js"},
-                            function () {
-                                execute(tabId);
-                            }
-                        );
-                    });
+            return;
+        }
 
-                    chrome.pageAction.show(tabId);
+        if (/photos|videos|articles|likes|notifications|comments|updates|replies/
+            .test(url)) {
+            chrome.pageAction.hide(tabId);
 
-                    chrome.tabs.insertCSS(tabId, {code: css.filters});
-                }
-            } else {
-                chrome.pageAction.hide(tabId);
-            }
+            // Show all the divs that have been hidden, stop observing:
+            chrome.tabs.insertCSS(tabId, {
+                code: css.show(
+                    css.groupsAndPeople + css.myGroups + css.filters
+                )
+            });
+            chrome.tabs.sendMessage(tabId, {
+                action: "disable"
+            });
+
+            return;
+        }
+
+        if (!(/\/feed\?[wz]=/).test(url)) {
+
+            // We have to get the settings on every page load
+            // because `handleClick` works in a different context
+            // (popup) and it doesn't update our `settings` variable
+            chrome.storage.sync.get(function (loadedSettings) {
+                settings = loadedSettings;
+                chrome.tabs.executeScript(
+                    tabId,
+                    {file: "content-script.js"},
+                    function () {
+                        execute(tabId);
+                    }
+                );
+            });
+
+            chrome.pageAction.show(tabId);
+
+            chrome.tabs.insertCSS(tabId, {code: css.filters});
         }
     }
 
