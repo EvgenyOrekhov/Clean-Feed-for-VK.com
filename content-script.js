@@ -47,19 +47,22 @@ CFFVK = CFFVK || (function () {
         settings;
 
     function processFeedItem(elem, setting, newClassName) {
-        var parent = elem.parentNode;
-
-        while (parent !== CFFVK.feed) {
-            if (parent.classList.contains("feed_row")) {
-                if (setting === "checked") {
-                    parent.classList.add(newClassName);
-                    return;
-                }
-                parent.classList.remove(newClassName);
-                return;
-            }
-            parent = parent.parentNode;
+        if (elem === CFFVK.feed) {
+            return;
         }
+
+        if (!elem.classList.contains("feed_row")) {
+            processFeedItem(elem.parentNode, setting, newClassName);
+            return;
+        }
+
+        if (setting === "checked") {
+            elem.classList.add(newClassName);
+            return;
+        }
+
+        elem.classList.remove(newClassName);
+        return;
     }
 
     function find(settingName) {
@@ -117,7 +120,10 @@ chrome.runtime.onMessage.addListener(
 
         if (message.action === "clean") {
             CFFVK.clean(message.settings);
-        } else if (message.action === "disable") {
+            return;
+        }
+
+        if (message.action === "disable") {
             CFFVK.observer.disconnect();
             console.log("CFFVK: cleaning disabled");
         }
