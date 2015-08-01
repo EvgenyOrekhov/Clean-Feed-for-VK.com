@@ -31,7 +31,7 @@ CFFVK = CFFVK || (function () {
 
             links: qAndALinks.map(function (qAndALink) {
                 return "[href*='" + qAndALink + "']";
-            }).join(","),
+            }).join(),
 
             apps: ".wall_post_source_default",
             instagram: ".wall_post_source_instagram",
