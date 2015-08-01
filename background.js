@@ -154,7 +154,7 @@
             url = tab.url;
 
             if (url.indexOf("vk.com/feed") > -1) {
-                if (!(/photos|articles|likes|notifications|comments|updates|replies/)
+                if (!(/photos|videos|articles|likes|notifications|comments|updates|replies/)
                     .test(url)) {
                     if (!(/\/feed\?[wz]=/).test(url)) {
 
