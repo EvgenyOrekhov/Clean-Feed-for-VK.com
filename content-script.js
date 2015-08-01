@@ -53,11 +53,13 @@ CFFVK = CFFVK || (function () {
 
         if (!elem.classList.contains("feed_row")) {
             processFeedItem(elem.parentNode, setting, newClassName);
+
             return;
         }
 
         if (setting === "checked") {
             elem.classList.add(newClassName);
+
             return;
         }
 
@@ -119,6 +121,7 @@ chrome.runtime.onMessage.addListener(
 
         if (message.action === "clean") {
             CFFVK.clean(message.settings);
+
             return;
         }
 
