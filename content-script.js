@@ -78,6 +78,21 @@ CFFVK = CFFVK || (function () {
         });
     }
 
+    chrome.runtime.onMessage.addListener(
+        function (message) {
+            if (message.action === "clean") {
+                CFFVK.clean(message.settings);
+
+                return;
+            }
+
+            if (message.action === "disable") {
+                CFFVK.observer.disconnect();
+                console.log("CFFVK: cleaning disabled");
+            }
+        }
+    );
+
     return {
         clean: function clean(receivedSettings) {
             if (receivedSettings) {
@@ -114,20 +129,3 @@ CFFVK.observer.observe(CFFVK.feed, {childList: true});
 
 document.getElementById("feed_new_posts").
         addEventListener("click", CFFVK.removeInlineStyles);
-
-chrome.runtime.onMessage.addListener(
-    function (message) {
-        "use strict";
-
-        if (message.action === "clean") {
-            CFFVK.clean(message.settings);
-
-            return;
-        }
-
-        if (message.action === "disable") {
-            CFFVK.observer.disconnect();
-            console.log("CFFVK: cleaning disabled");
-        }
-    }
-);
