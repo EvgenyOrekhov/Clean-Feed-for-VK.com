@@ -79,13 +79,13 @@
             labels2and3.forEach(function (label) {
                 var checkbox = label.children[0];
 
-                if (settings.groups !== "checked") {
+                if (settings.groups === "checked") {
+                    label.style.display = "block";
+                } else {
                     label.style.display = "none";
                     checkbox.checked = false;
                     newSettings[checkbox.name] = "";
                     settings[checkbox.name] = "";
-                } else {
-                    label.style.display = "block";
                 }
             });
 
@@ -154,29 +154,8 @@
             url = tab.url;
 
             if (url.indexOf("vk.com/feed") > -1) {
-                if (!(/photos|videos|articles|likes|notifications|comments|updates|replies/)
+                if (/photos|videos|articles|likes|notifications|comments|updates|replies/
                     .test(url)) {
-                    if (!(/\/feed\?[wz]=/).test(url)) {
-
-                        // We have to get the settings on every page load
-                        // because `handleClick` works in a different context
-                        // (popup) and it doesn't update our `settings` variable
-                        chrome.storage.sync.get(function (loadedSettings) {
-                            settings = loadedSettings;
-                            chrome.tabs.executeScript(
-                                tabId,
-                                {file: "content-script.js"},
-                                function () {
-                                    execute(tabId);
-                                }
-                            );
-                        });
-
-                        chrome.pageAction.show(tabId);
-
-                        chrome.tabs.insertCSS(tabId, {code: css.filters});
-                    }
-                } else {
                     chrome.pageAction.hide(tabId);
 
                     // Show all the divs that have been hidden, stop observing:
@@ -188,6 +167,25 @@
                     chrome.tabs.sendMessage(tabId, {
                         action: "disable"
                     });
+                } else if (!(/\/feed\?[wz]=/).test(url)) {
+
+                    // We have to get the settings on every page load
+                    // because `handleClick` works in a different context
+                    // (popup) and it doesn't update our `settings` variable
+                    chrome.storage.sync.get(function (loadedSettings) {
+                        settings = loadedSettings;
+                        chrome.tabs.executeScript(
+                            tabId,
+                            {file: "content-script.js"},
+                            function () {
+                                execute(tabId);
+                            }
+                        );
+                    });
+
+                    chrome.pageAction.show(tabId);
+
+                    chrome.tabs.insertCSS(tabId, {code: css.filters});
                 }
             } else {
                 chrome.pageAction.hide(tabId);

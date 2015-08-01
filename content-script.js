@@ -62,7 +62,6 @@ CFFVK = CFFVK || (function () {
         }
 
         elem.classList.remove(newClassName);
-        return;
     }
 
     function find(settingName) {
