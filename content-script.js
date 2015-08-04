@@ -52,9 +52,7 @@ CFFVK = CFFVK || (function () {
         }
 
         if (!elem.classList.contains("feed_row")) {
-            processFeedItem(elem.parentNode, setting, newClassName);
-
-            return;
+            return processFeedItem(elem.parentNode, setting, newClassName);
         }
 
         if (setting === "checked") {
