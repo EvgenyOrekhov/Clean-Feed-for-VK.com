@@ -203,11 +203,10 @@
     // Load settings. If there are none, set them to defaults
     // (check only the first checkbox):
     chrome.storage.sync.get(function (loadedSettings) {
+        settings = loadedSettings;
         if (Object.keys(loadedSettings).length === 0) {
             settings = {groups: "checked"};
             chrome.storage.sync.set(settings);
-        } else {
-            settings = loadedSettings;
         }
         setUpTheSettingsPage();
     });
