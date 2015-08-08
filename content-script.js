@@ -56,9 +56,7 @@ CFFVK = CFFVK || (function () {
         }
 
         if (setting === "checked") {
-            elem.classList.add(newClassName);
-
-            return;
+            return elem.classList.add(newClassName);
         }
 
         elem.classList.remove(newClassName);
@@ -79,9 +77,7 @@ CFFVK = CFFVK || (function () {
     chrome.runtime.onMessage.addListener(
         function (message) {
             if (message.action === "clean") {
-                CFFVK.clean(message.settings);
-
-                return;
+                return CFFVK.clean(message.settings);
             }
 
             if (message.action === "disable") {

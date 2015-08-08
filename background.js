@@ -159,9 +159,7 @@
         url = tab.url;
 
         if (url.indexOf("vk.com/feed") === -1) {
-            chrome.pageAction.hide(tabId);
-
-            return;
+            return chrome.pageAction.hide(tabId);
         }
 
         if (/photos|videos|articles|likes|notifications|comments|updates|replies/
@@ -174,11 +172,10 @@
                     css.groupsAndPeople + css.myGroups + css.filters
                 )
             });
-            chrome.tabs.sendMessage(tabId, {
+
+            return chrome.tabs.sendMessage(tabId, {
                 action: "disable"
             });
-
-            return;
         }
 
         if (!(/\/feed\?[wz]=/).test(url)) {
