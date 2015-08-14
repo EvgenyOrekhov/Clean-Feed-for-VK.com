@@ -203,7 +203,13 @@
     chrome.storage.sync.get(function (loadedSettings) {
         settings = loadedSettings;
         if (Object.keys(loadedSettings).length === 0) {
-            settings = {groups: "checked"};
+            settings = {
+                groups: "checked",
+                links: "checked",
+                apps: "checked",
+                group_share: "checked",
+                event_share: "checked"
+            };
             chrome.storage.sync.set(settings);
         }
         if (document.settingsForm) {
