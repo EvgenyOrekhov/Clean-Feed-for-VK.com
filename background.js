@@ -132,20 +132,18 @@
             });
         }
 
-        if (document.settingsForm) {
-            checkboxes = Array.prototype.slice.call(
-                document.settingsForm.getElementsByTagName("input")
-            );
+        checkboxes = Array.prototype.slice.call(
+            document.settingsForm.getElementsByTagName("input")
+        );
 
-            hideOrShowSomeCheckboxes();
+        hideOrShowSomeCheckboxes();
 
-            checkboxes.forEach(function (checkbox) {
-                checkbox.addEventListener("click", handleClick);
-                if (settings[checkbox.name] === "checked") {
-                    checkbox.checked = true;
-                }
-            });
-        }
+        checkboxes.forEach(function (checkbox) {
+            checkbox.addEventListener("click", handleClick);
+            if (settings[checkbox.name] === "checked") {
+                checkbox.checked = true;
+            }
+        });
     }
 
     // Launch the main function only on certain pages of VK:
@@ -208,7 +206,9 @@
             settings = {groups: "checked"};
             chrome.storage.sync.set(settings);
         }
-        setUpTheSettingsPage();
+        if (document.settingsForm) {
+            setUpTheSettingsPage();
+        }
     });
 
     chrome.tabs.onUpdated.addListener(checkForValidUrl);
