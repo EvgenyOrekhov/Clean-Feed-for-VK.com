@@ -5,7 +5,9 @@
     "use strict";
 
     function setUpTheSettingsPage(settings) {
-        var checkboxes;
+        var checkboxes = Array.prototype.slice.call(
+            document.settingsForm.getElementsByTagName("input")
+        );
 
         function hideOrShowSomeCheckboxes() {
             var labels2and3 = [
@@ -66,10 +68,6 @@
                 }
             );
         }
-
-        checkboxes = Array.prototype.slice.call(
-            document.settingsForm.getElementsByTagName("input")
-        );
 
         hideOrShowSomeCheckboxes();
 

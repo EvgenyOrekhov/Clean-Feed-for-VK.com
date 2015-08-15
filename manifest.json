@@ -12,7 +12,7 @@
     "page_action": {
         "default_icon": "icon16.png",
         "default_title": "Настройки",
-        "default_popup": "options.html"
+        "default_popup": "popup.html"
     },
     "permissions": [
         "tabs",
