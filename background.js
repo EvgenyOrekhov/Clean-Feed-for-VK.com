@@ -1,5 +1,5 @@
 /*global chrome */
-/*jslint browser: true, devel: true */
+/*jslint browser: true */
 
 (function () {
     "use strict";
@@ -67,76 +67,6 @@
         });
     }
 
-    function setUpTheSettingsPage() {
-        var checkboxes;
-
-        function hideOrShowSomeCheckboxes() {
-            var labels2and3 = [
-                    document.getElementById("mygroups-label"),
-                    document.getElementById("people-label")
-                ],
-                linksLabel = document.getElementById("links-label"),
-                linksCheckbox = linksLabel.children[0];
-
-            // If the first checkbox (`groups`) is unchecked
-            // then uncheck the second and the third, hide them,
-            // and reset their settings in storage:
-            labels2and3.forEach(function (label) {
-                var checkbox = label.children[0];
-
-                if (settings.groups) {
-                    label.style.display = "block";
-
-                    return;
-                }
-
-                label.style.display = "none";
-                checkbox.checked = false;
-                settings[checkbox.name] = false;
-            });
-
-            // If the `external_links` checkbox is checked
-            // then uncheck the `links` checkbox, hide it,
-            // and reset its setting in storage:
-            if (settings.external_links) {
-                linksLabel.style.display = "none";
-                linksCheckbox.checked = false;
-                settings[linksCheckbox.name] = false;
-            } else {
-                linksLabel.style.display = "block";
-            }
-
-            chrome.storage.sync.set(settings);
-        }
-
-        // Catch clicks on checkboxes and update settings,
-        // reapply the main function:
-        function handleClick(event) {
-            settings[event.target.name] = event.target.checked;
-            hideOrShowSomeCheckboxes();
-            chrome.tabs.query(
-                {
-                    active: true,
-                    currentWindow: true
-                },
-                function (tabs) {
-                    execute(tabs[0].id);
-                }
-            );
-        }
-
-        checkboxes = Array.prototype.slice.call(
-            document.settingsForm.getElementsByTagName("input")
-        );
-
-        hideOrShowSomeCheckboxes();
-
-        checkboxes.forEach(function (checkbox) {
-            checkbox.addEventListener("click", handleClick);
-            checkbox.checked = !!settings[checkbox.name];
-        });
-    }
-
     // Launch the main function only on certain pages of VK:
     function checkForValidUrl(tabId, changeInfo, tab) {
         var url;
@@ -167,39 +97,38 @@
             });
         }
 
-        if (!(/\/feed\?[wz]=/).test(url)) {
-
-            // We have to get the settings on every page load
-            // because `handleClick` works in a different context
-            // (popup) and it doesn't update our `settings` variable
-            chrome.storage.sync.get(function (loadedSettings) {
-                if (Object.keys(loadedSettings).length) {
-                    settings = loadedSettings;
-                }
-                chrome.tabs.executeScript(
-                    tabId,
-                    {file: "content-script.js"},
-                    function () {
-                        execute(tabId);
-                    }
-                );
-            });
-
-            chrome.pageAction.show(tabId);
-
-            chrome.tabs.insertCSS(tabId, {code: css.filters});
+        if (/\/feed\?[wz]=/.test(url)) {
+            return;
         }
+
+        chrome.storage.sync.get(function (loadedSettings) {
+            if (Object.keys(loadedSettings).length) {
+                settings = loadedSettings;
+            } else {
+                chrome.storage.sync.set(settings);
+            }
+            chrome.tabs.executeScript(
+                tabId,
+                {file: "content-script.js"},
+                function () {
+                    execute(tabId);
+                }
+            );
+        });
+
+        chrome.pageAction.show(tabId);
+
+        chrome.tabs.insertCSS(tabId, {code: css.filters});
     }
 
-    // Load settings:
-    chrome.storage.sync.get(function (loadedSettings) {
-        if (Object.keys(loadedSettings).length) {
-            settings = loadedSettings;
+    chrome.runtime.onMessage.addListener(
+        function (message) {
+            if (message.action === "execute") {
+                settings = message.settings;
+                execute(message.tabId);
+            }
         }
-        if (document.settingsForm) {
-            setUpTheSettingsPage();
-        }
-    });
+    );
 
     chrome.tabs.onUpdated.addListener(checkForValidUrl);
 }());
