@@ -30,21 +30,27 @@
                 return rule.replace(/none/g, "block");
             }
         },
-        settings = {};
+        settings = {
+            groups: true,
+            links: true,
+            apps: true,
+            group_share: true,
+            event_share: true
+        };
 
     // The main function
     function execute(tabId) {
         var cssCode = "";
 
-        if (settings.groups === "checked") {
+        if (settings.groups) {
 
-            if (settings.people === "checked") {
+            if (settings.people) {
                 cssCode += css.groupsAndPeople;
             } else {
                 cssCode += css.show(css.groupsAndPeople) + css.groups;
             }
 
-            if (settings.mygroups === "checked") {
+            if (settings.mygroups) {
                 cssCode += css.myGroups;
             } else {
                 cssCode += css.show(css.myGroups);
@@ -70,8 +76,7 @@
                     document.getElementById("people-label")
                 ],
                 linksLabel = document.getElementById("links-label"),
-                linksCheckbox = linksLabel.children[0],
-                newSettings = {};
+                linksCheckbox = linksLabel.children[0];
 
             // If the first checkbox (`groups`) is unchecked
             // then uncheck the second and the third, hide them,
@@ -79,7 +84,7 @@
             labels2and3.forEach(function (label) {
                 var checkbox = label.children[0];
 
-                if (settings.groups === "checked") {
+                if (settings.groups) {
                     label.style.display = "block";
 
                     return;
@@ -87,49 +92,37 @@
 
                 label.style.display = "none";
                 checkbox.checked = false;
-                newSettings[checkbox.name] = "";
-                settings[checkbox.name] = "";
+                settings[checkbox.name] = false;
             });
 
             // If the `external_links` checkbox is checked
             // then uncheck the `links` checkbox, hide it,
             // and reset its setting in storage:
-            if (settings.external_links === "checked") {
+            if (settings.external_links) {
                 linksLabel.style.display = "none";
                 linksCheckbox.checked = false;
-                newSettings[linksCheckbox.name] = "";
-                settings[linksCheckbox.name] = "";
+                settings[linksCheckbox.name] = false;
             } else {
                 linksLabel.style.display = "block";
             }
 
-            if (Object.keys(newSettings).length > 0) {
-                chrome.storage.sync.set(settings);
-            }
+            chrome.storage.sync.set(settings);
         }
 
-        // Catch clicks on checkboxes and remember the values ("checked"),
+        // Catch clicks on checkboxes and update settings,
         // reapply the main function:
         function handleClick(event) {
-            var name = event.target.name,
-                value = event.target.value;
-
-            settings[name] = settings[name] === value
-                ? ""
-                : value;
-
-            chrome.storage.sync.set(settings, function () {
-                hideOrShowSomeCheckboxes();
-                chrome.tabs.query(
-                    {
-                        active: true,
-                        currentWindow: true
-                    },
-                    function (tabs) {
-                        execute(tabs[0].id);
-                    }
-                );
-            });
+            settings[event.target.name] = event.target.checked;
+            hideOrShowSomeCheckboxes();
+            chrome.tabs.query(
+                {
+                    active: true,
+                    currentWindow: true
+                },
+                function (tabs) {
+                    execute(tabs[0].id);
+                }
+            );
         }
 
         checkboxes = Array.prototype.slice.call(
@@ -140,9 +133,7 @@
 
         checkboxes.forEach(function (checkbox) {
             checkbox.addEventListener("click", handleClick);
-            if (settings[checkbox.name] === "checked") {
-                checkbox.checked = true;
-            }
+            checkbox.checked = !!settings[checkbox.name];
         });
     }
 
@@ -182,7 +173,9 @@
             // because `handleClick` works in a different context
             // (popup) and it doesn't update our `settings` variable
             chrome.storage.sync.get(function (loadedSettings) {
-                settings = loadedSettings;
+                if (Object.keys(loadedSettings).length) {
+                    settings = loadedSettings;
+                }
                 chrome.tabs.executeScript(
                     tabId,
                     {file: "content-script.js"},
@@ -198,19 +191,10 @@
         }
     }
 
-    // Load settings. If there are none, set them to defaults
-    // (check only the first checkbox):
+    // Load settings:
     chrome.storage.sync.get(function (loadedSettings) {
-        settings = loadedSettings;
-        if (Object.keys(loadedSettings).length === 0) {
-            settings = {
-                groups: "checked",
-                links: "checked",
-                apps: "checked",
-                group_share: "checked",
-                event_share: "checked"
-            };
-            chrome.storage.sync.set(settings);
+        if (Object.keys(loadedSettings).length) {
+            settings = loadedSettings;
         }
         if (document.settingsForm) {
             setUpTheSettingsPage();

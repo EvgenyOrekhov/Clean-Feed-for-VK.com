@@ -55,7 +55,7 @@ CFFVK = CFFVK || (function () {
             return processFeedItem(elem.parentNode, setting, newClassName);
         }
 
-        if (setting === "checked") {
+        if (setting) {
             return elem.classList.add(newClassName);
         }
 
