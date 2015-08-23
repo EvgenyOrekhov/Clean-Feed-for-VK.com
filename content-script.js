@@ -1,9 +1,7 @@
 /*global MutationObserver, scroll, chrome */
 /*jslint browser: true, devel: true */
 
-var CFFVK;
-
-CFFVK = CFFVK || (function () {
+(function () {
     "use strict";
 
     var qAndALinks = [
@@ -44,10 +42,13 @@ CFFVK = CFFVK || (function () {
             likes: ".post_like_icon.no_likes",
             comments: ".reply_link"
         },
+        feed = document.getElementById("feed_rows"),
+        url = location.href,
+        observer,
         settings;
 
     function processFeedItem(elem, setting, newClassName) {
-        if (elem === CFFVK.feed) {
+        if (elem === feed) {
             return;
         }
 
@@ -65,7 +66,7 @@ CFFVK = CFFVK || (function () {
     function find(settingName) {
         var selector = selectorsToFind[settingName],
             els = Array.prototype.slice.call(
-                CFFVK.feed.querySelectorAll(selector)
+                feed.querySelectorAll(selector)
             ),
             newClassName = "cffvk-" + settingName;
 
@@ -74,52 +75,66 @@ CFFVK = CFFVK || (function () {
         });
     }
 
+    function clean(receivedSettings) {
+        if (receivedSettings) {
+            settings = receivedSettings;
+        }
+        Object.keys(selectorsToFind).forEach(find);
+        console.log("CFFVK: your feed has been cleaned");
+    }
+
+    function removeInlineStyles() {
+        var posts = Array.prototype.slice.call(
+            feed.getElementsByClassName("feed_row")
+        );
+
+        posts.forEach(function (post) {
+            post.removeAttribute("style");
+        });
+
+        scroll(0, 0);
+    }
+
+    function checkUrl() {
+        if (url !== location.href) {
+            url = location.href;
+            chrome.runtime.sendMessage({
+                action: "activate"
+            });
+        }
+    }
+
+    observer = new MutationObserver(function (mutations) {
+        if (mutations[0].addedNodes.length > 0) {
+            clean();
+            console.log("             by the MutationObserver");
+        }
+    });
+
     chrome.runtime.onMessage.addListener(
         function (message) {
             if (message.action === "clean") {
-                return CFFVK.clean(message.settings);
+                feed = document.getElementById("feed_rows");
+                observer.disconnect();
+                observer.observe(feed, {
+                    childList: true,
+                    subtree: true
+                });
+                document.getElementById("feed_new_posts")
+                    .addEventListener("click", removeInlineStyles);
+
+                return clean(message.settings);
             }
 
             if (message.action === "disable") {
-                CFFVK.observer.disconnect();
+                observer.disconnect();
                 console.log("CFFVK: cleaning disabled");
             }
         }
     );
 
-    return {
-        clean: function clean(receivedSettings) {
-            if (receivedSettings) {
-                settings = receivedSettings;
-            }
-            Object.keys(selectorsToFind).forEach(find);
-            console.log("CFFVK: your feed has been cleaned");
-        },
-
-        observer: new MutationObserver(function (mutations) {
-            if (mutations[0].addedNodes.length > 0) {
-                CFFVK.clean();
-                console.log("             by the MutationObserver");
-            }
-        }),
-
-        removeInlineStyles: function removeInlineStyles() {
-            var posts = Array.prototype.slice.call(
-                CFFVK.feed.getElementsByClassName("feed_row")
-            );
-
-            posts.forEach(function (post) {
-                post.removeAttribute("style");
-            });
-
-            scroll(0, 0);
-        }
-    };
+    chrome.runtime.sendMessage({
+        action: "activate"
+    });
+    setInterval(checkUrl, 100);
 }());
-
-CFFVK.feed = document.getElementById("feed_rows");
-
-CFFVK.observer.observe(CFFVK.feed, {childList: true});
-
-document.getElementById("feed_new_posts")
-    .addEventListener("click", CFFVK.removeInlineStyles);

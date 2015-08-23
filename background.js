@@ -1,5 +1,4 @@
 /*global chrome */
-/*jslint browser: true */
 
 (function () {
     "use strict";
@@ -67,38 +66,28 @@
         });
     }
 
-    // Launch the main function only on certain pages of VK:
-    function checkForValidUrl(tabId, changeInfo, tab) {
-        var url;
-
-        if (changeInfo.status !== "loading") {
+    function activate(sender) {
+        if (/\/feed\?[wz]=/.test(sender.tab.url)) {
             return;
         }
 
-        url = tab.url;
-
-        if (url.indexOf("vk.com/feed") === -1) {
-            return chrome.pageAction.hide(tabId);
-        }
-
-        if (/photos|videos|articles|likes|notifications|comments|updates|replies/
-            .test(url)) {
-            chrome.pageAction.hide(tabId);
+        if (
+            sender.tab.url.indexOf("vk.com/feed") === -1 ||
+            (/photos|videos|articles|likes|notifications|comments|updates|replies/)
+                .test(sender.tab.url)
+        ) {
+            chrome.pageAction.hide(sender.tab.id);
 
             // Show all the divs that have been hidden, stop observing:
-            chrome.tabs.insertCSS(tabId, {
+            chrome.tabs.insertCSS(sender.tab.id, {
                 code: css.show(
                     css.groupsAndPeople + css.myGroups + css.filters
                 )
             });
 
-            return chrome.tabs.sendMessage(tabId, {
+            return chrome.tabs.sendMessage(sender.tab.id, {
                 action: "disable"
             });
-        }
-
-        if (/\/feed\?[wz]=/.test(url)) {
-            return;
         }
 
         chrome.storage.sync.get(function (loadedSettings) {
@@ -107,28 +96,23 @@
             } else {
                 chrome.storage.sync.set(settings);
             }
-            chrome.tabs.executeScript(
-                tabId,
-                {file: "content-script.js"},
-                function () {
-                    execute(tabId);
-                }
-            );
+            execute(sender.tab.id);
         });
 
-        chrome.pageAction.show(tabId);
+        chrome.pageAction.show(sender.tab.id);
 
-        chrome.tabs.insertCSS(tabId, {code: css.filters});
+        chrome.tabs.insertCSS(sender.tab.id, {code: css.filters});
     }
 
     chrome.runtime.onMessage.addListener(
-        function (message) {
+        function (message, sender) {
             if (message.action === "execute") {
                 settings = message.settings;
                 execute(message.tabId);
             }
+            if (message.action === "activate") {
+                activate(sender);
+            }
         }
     );
-
-    chrome.tabs.onUpdated.addListener(checkForValidUrl);
 }());

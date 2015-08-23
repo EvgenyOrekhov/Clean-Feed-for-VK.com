@@ -2,7 +2,7 @@
     "name": "Чистые Новости для VK.com",
     "version": "1.9.6",
     "manifest_version": 2,
-    "minimum_chrome_version": "22.0.1229.79",
+    "minimum_chrome_version": "26",
     "description": "Очищает захламлённые новости ВКонтакте от отстойных репостов ваших друзей",
     "icons": {
         "16": "icon16.png",
@@ -15,8 +15,7 @@
         "default_popup": "popup.html"
     },
     "permissions": [
-        "tabs",
-        "*://vk.com/feed",
+        "*://vk.com/*",
         "storage"
     ],
     "background": {
@@ -24,5 +23,16 @@
             "background.js"
         ],
         "persistent": false
-    }
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://vk.com/*"
+            ],
+            "js": [
+                "content-script.js"
+            ],
+            "run_at": "document_end"
+        }
+    ]
 }
