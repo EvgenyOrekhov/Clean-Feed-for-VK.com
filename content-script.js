@@ -1,4 +1,4 @@
-/*global MutationObserver, scroll, chrome */
+/*global chrome, MutationObserver, scroll, NodeList */
 /*jslint browser: true, devel: true */
 
 (function () {
@@ -42,7 +42,7 @@
             likes: ".post_like_icon.no_likes",
             comments: ".reply_link"
         },
-        feed = document.getElementById("feed_rows"),
+        feed = document.querySelector("#feed_rows"),
         url = location.href,
         observer,
         settings;
@@ -65,9 +65,7 @@
 
     function find(settingName) {
         var selector = selectorsToFind[settingName],
-            els = Array.prototype.slice.call(
-                feed.querySelectorAll(selector)
-            ),
+            els = feed.querySelectorAll(selector),
             newClassName = "cffvk-" + settingName;
 
         els.forEach(function (el) {
@@ -84,9 +82,7 @@
     }
 
     function removeInlineStyles() {
-        var posts = Array.prototype.slice.call(
-            feed.getElementsByClassName("feed_row")
-        );
+        var posts = feed.querySelectorAll(".feed_row");
 
         posts.forEach(function (post) {
             post.removeAttribute("style");
@@ -104,6 +100,9 @@
         }
     }
 
+    NodeList.prototype.forEach = NodeList.prototype.forEach ||
+            Array.prototype.forEach;
+
     observer = new MutationObserver(function (mutations) {
         if (mutations[0].addedNodes.length > 0) {
             clean();
@@ -114,13 +113,13 @@
     chrome.runtime.onMessage.addListener(
         function (message) {
             if (message.action === "clean") {
-                feed = document.getElementById("feed_rows");
+                feed = document.querySelector("#feed_rows");
                 observer.disconnect();
                 observer.observe(feed, {
                     childList: true,
                     subtree: true
                 });
-                document.getElementById("feed_new_posts")
+                document.querySelector("#feed_new_posts")
                     .addEventListener("click", removeInlineStyles);
 
                 return clean(message.settings);

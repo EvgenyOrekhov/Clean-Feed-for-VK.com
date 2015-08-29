@@ -1,20 +1,18 @@
-/*global chrome */
+/*global chrome, NodeList */
 /*jslint browser: true */
 
 (function () {
     "use strict";
 
     function setUpTheSettingsPage(settings) {
-        var checkboxes = Array.prototype.slice.call(
-            document.settingsForm.getElementsByTagName("input")
-        );
+        var checkboxes = document.querySelectorAll("input");
 
         function hideOrShowSomeCheckboxes() {
             var labels2and3 = [
-                    document.getElementById("mygroups-label"),
-                    document.getElementById("people-label")
+                    document.querySelector("#mygroups-label"),
+                    document.querySelector("#people-label")
                 ],
-                linksLabel = document.getElementById("links-label"),
+                linksLabel = document.querySelector("#links-label"),
                 linksCheckbox = linksLabel.children[0];
 
             // If the first checkbox (`groups`) is unchecked
@@ -76,6 +74,9 @@
             checkbox.checked = !!settings[checkbox.name];
         });
     }
+
+    NodeList.prototype.forEach = NodeList.prototype.forEach ||
+            Array.prototype.forEach;
 
     // Load settings:
     chrome.storage.sync.get(function (loadedSettings) {
