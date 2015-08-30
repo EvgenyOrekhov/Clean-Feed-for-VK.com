@@ -1,4 +1,4 @@
-# Created by http://www.gitignore.io
+# Created by https://www.gitignore.io/api/windows,linux,osx,archives
 
 ### Windows ###
 # Windows image file caches
@@ -17,12 +17,18 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 
+# Windows shortcuts
+*.lnk
+
 
 ### Linux ###
 *~
 
 # KDE directory preferences
 .directory
+
+# Linux trash folder which might appear on any partition or disk
+.Trash-*
 
 
 ### OSX ###
@@ -36,9 +42,13 @@ Icon
 # Thumbnails
 ._*
 
-# Files that might appear on external disk
+# Files that might appear in the root of a volume
+.DocumentRevisions-V100
+.fseventsd
 .Spotlight-V100
+.TemporaryItems
 .Trashes
+.VolumeIcon.icns
 
 # Directories potentially created on remote AFP share
 .AppleDB
@@ -77,3 +87,9 @@ Temporary Items
 *.msm
 *.msp
 
+
+#Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
