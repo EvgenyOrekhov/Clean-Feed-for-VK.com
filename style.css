@@ -1,29 +1,35 @@
 body {
-  width: 250px;
-  margin: .3em auto;
-  font-size: .8em;
-  font-family: sans-serif;
+    width: 250px;
+    margin: .3em auto;
+    font-size: .8em;
+    font-family: sans-serif;
 }
 
 .title {
-  text-align: center;
-  font-weight: bold;
-  font-size: 1.3em;
-  margin-bottom: .2em;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.3em;
+    margin-bottom: .2em;
 }
 
-a { text-decoration: none; }
+a {
+    text-decoration: none;
+}
 
-a:hover { text-decoration: underline; }
+a:hover {
+    text-decoration: underline;
+}
 
-form { -webkit-user-select: none; }
+form {
+    -webkit-user-select: none;
+}
 
 .textcenter {
-  text-align: center;
-  cursor: default;
+    text-align: center;
+    cursor: default;
 }
 
 label {
-  display: block;
-  cursor: pointer;
+    display: block;
+    cursor: pointer;
 }
