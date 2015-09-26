@@ -79,7 +79,5 @@
             Array.prototype.forEach;
 
     // Load settings:
-    chrome.storage.sync.get(function (loadedSettings) {
-        setUpTheSettingsPage(loadedSettings);
-    });
+    chrome.storage.sync.get(setUpTheSettingsPage);
 }());

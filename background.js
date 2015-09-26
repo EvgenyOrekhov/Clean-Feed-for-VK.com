@@ -39,24 +39,17 @@
 
     // The main function
     function execute(tabId) {
-        var cssCode = "";
+        var cssCode = css.show(css.groupsAndPeople + css.myGroups);
 
         if (settings.groups) {
+            var peopleCssCode = settings.people
+                    ? css.groupsAndPeople
+                    : css.show(css.groupsAndPeople) + css.groups,
+                myGroupsCssCode = settings.mygroups
+                    ? css.myGroups
+                    : css.show(css.myGroups);
 
-            if (settings.people) {
-                cssCode += css.groupsAndPeople;
-            } else {
-                cssCode += css.show(css.groupsAndPeople) + css.groups;
-            }
-
-            if (settings.mygroups) {
-                cssCode += css.myGroups;
-            } else {
-                cssCode += css.show(css.myGroups);
-            }
-
-        } else {
-            cssCode += css.show(css.groupsAndPeople + css.myGroups);
+            cssCode = peopleCssCode + myGroupsCssCode;
         }
 
         chrome.tabs.insertCSS(tabId, {code: cssCode});
@@ -104,15 +97,15 @@
         chrome.tabs.insertCSS(sender.tab.id, {code: css.filters});
     }
 
-    chrome.runtime.onMessage.addListener(
-        function (message, sender) {
-            if (message.action === "execute") {
-                settings = message.settings;
-                execute(message.tabId);
-            }
-            if (message.action === "activate") {
-                activate(sender);
-            }
+    chrome.runtime.onMessage.addListener(function (message, sender) {
+        if (message.action === "execute") {
+            settings = message.settings;
+
+            return execute(message.tabId);
         }
-    );
+
+        if (message.action === "activate") {
+            activate(sender);
+        }
+    });
 }());

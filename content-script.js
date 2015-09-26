@@ -110,27 +110,25 @@
         }
     });
 
-    chrome.runtime.onMessage.addListener(
-        function (message) {
-            if (message.action === "clean") {
-                feed = document.querySelector("#feed_rows");
-                observer.disconnect();
-                observer.observe(feed, {
-                    childList: true,
-                    subtree: true
-                });
-                document.querySelector("#feed_new_posts")
-                    .addEventListener("click", removeInlineStyles);
+    chrome.runtime.onMessage.addListener(function (message) {
+        if (message.action === "clean") {
+            feed = document.querySelector("#feed_rows");
+            observer.disconnect();
+            observer.observe(feed, {
+                childList: true,
+                subtree: true
+            });
+            document.querySelector("#feed_new_posts")
+                .addEventListener("click", removeInlineStyles);
 
-                return clean(message.settings);
-            }
-
-            if (message.action === "disable") {
-                observer.disconnect();
-                console.log("CFFVK: cleaning disabled");
-            }
+            return clean(message.settings);
         }
-    );
+
+        if (message.action === "disable") {
+            observer.disconnect();
+            console.log("CFFVK: cleaning disabled");
+        }
+    });
 
     chrome.runtime.sendMessage({
         action: "activate"
