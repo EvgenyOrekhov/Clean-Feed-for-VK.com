@@ -15,6 +15,12 @@
                 linksLabel = document.querySelector("#links-label"),
                 linksCheckbox = linksLabel.children[0];
 
+            checkboxes.forEach(function (checkbox) {
+                if (checkbox.name !== "is-disabled") {
+                    checkbox.disabled = !!settings["is-disabled"];
+                }
+            });
+
             // If the first checkbox (`groups`) is unchecked
             // then uncheck the second and the third, hide them,
             // and reset their settings in storage:

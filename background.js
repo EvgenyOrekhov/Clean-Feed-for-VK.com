@@ -37,9 +37,31 @@
             event_share: true
         };
 
+    function disable(tabId) {
+        chrome.pageAction.setIcon({
+            tabId: tabId,
+            path: "disabled-icon16.png"
+        });
+
+        // Show all the divs that have been hidden, stop observing:
+        chrome.tabs.insertCSS(tabId, {
+            code: css.show(
+                css.groupsAndPeople + css.myGroups + css.filters
+            )
+        });
+
+        chrome.tabs.sendMessage(tabId, {
+            action: "disable"
+        });
+    }
+
     // The main function
     function execute(tabId) {
         var cssCode = css.show(css.groupsAndPeople + css.myGroups);
+
+        if (settings["is-disabled"]) {
+            return disable(tabId);
+        }
 
         if (settings.groups) {
             var peopleCssCode = settings.people
@@ -52,6 +74,11 @@
             cssCode = peopleCssCode + myGroupsCssCode;
         }
 
+        chrome.pageAction.setIcon({
+            tabId: tabId,
+            path: "icon16.png"
+        });
+        chrome.tabs.insertCSS(tabId, {code: css.filters});
         chrome.tabs.insertCSS(tabId, {code: cssCode});
         chrome.tabs.sendMessage(tabId, {
             action: "clean",
@@ -71,16 +98,7 @@
         ) {
             chrome.pageAction.hide(sender.tab.id);
 
-            // Show all the divs that have been hidden, stop observing:
-            chrome.tabs.insertCSS(sender.tab.id, {
-                code: css.show(
-                    css.groupsAndPeople + css.myGroups + css.filters
-                )
-            });
-
-            return chrome.tabs.sendMessage(sender.tab.id, {
-                action: "disable"
-            });
+            return disable(sender.tab.id);
         }
 
         chrome.storage.sync.get(function (loadedSettings) {
@@ -93,8 +111,6 @@
         });
 
         chrome.pageAction.show(sender.tab.id);
-
-        chrome.tabs.insertCSS(sender.tab.id, {code: css.filters});
     }
 
     chrome.runtime.onMessage.addListener(function (message, sender) {

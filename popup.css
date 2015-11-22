@@ -33,3 +33,24 @@ label {
     display: block;
     cursor: pointer;
 }
+
+.on-off-switch-input {
+    display: none;
+}
+
+.on-off-switch {
+    height: 50px;
+    margin-bottom: 5px;
+    background-image: url("on-off-switch.svg");
+    background-size: 15%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.on-off-switch:hover {
+    -webkit-filter: drop-shadow(0 0 2px #666);
+}
+
+.on-off-switch-input:checked + .on-off-switch {
+    opacity: 0.25;
+}
