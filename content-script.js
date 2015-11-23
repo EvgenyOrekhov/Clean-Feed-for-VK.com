@@ -27,9 +27,11 @@
         ],
         selectorsToFind = {
 
-            links: qAndALinks.map(function (qAndALink) {
-                return "[href*='" + qAndALink + "']";
-            }).join(),
+            links: qAndALinks
+                .map(function (qAndALink) {
+                    return ".wall_text [href*='" + qAndALink + "']";
+                })
+                .join(),
 
             apps: ".wall_post_source_default",
             instagram: ".wall_post_source_instagram",
@@ -37,7 +39,8 @@
             mem_link: ".mem_link[mention_id^='club']",
             event_share: ".event_share",
             external_links:
-                    "a[href^='/away.php?to=']:not(.wall_post_source_icon)",
+                    ".wall_text [href^='/away.php?to=']" +
+                    ":not(.wall_post_source_icon)",
             wall_post_more: ".wall_post_more",
             likes: ".post_like_icon.no_likes",
             comments: ".reply_link"
