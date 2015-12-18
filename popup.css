@@ -22,6 +22,9 @@ a:hover {
 
 form {
     -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .textcenter {
@@ -39,6 +42,7 @@ label {
 }
 
 .on-off-switch {
+    display: block;
     height: 50px;
     margin-bottom: 5px;
     background-image: url("on-off-switch.svg");
