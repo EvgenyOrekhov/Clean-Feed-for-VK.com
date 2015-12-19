@@ -1,4 +1,5 @@
 /*global chrome */
+/*jslint browser: true */
 
 (function () {
     "use strict";
