@@ -1,5 +1,5 @@
 /*global chrome */
-/*jslint browser: true */
+/*jslint browser */
 
 (function () {
     "use strict";

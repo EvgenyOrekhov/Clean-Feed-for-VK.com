@@ -1,0 +1,33 @@
+{
+  "name": "clean-feed-for-vk.com",
+  "version": "1.11.2",
+  "description": "Расширение для Google Chrome, которое очищает захламлённые новости ВКонтакте от отстойных репостов ваших друзей",
+  "keywords": [
+    "VK",
+    "ВК",
+    "ВКонтакте"
+  ],
+  "scripts": {
+    "test": "node test/jslint.js && node test/csslint.js && node test/htmlhint.js && node test/w3cjs.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com.git"
+  },
+  "author": {
+    "name": "Evgeny Orekhov",
+    "url": "https://plus.google.com/+ЕвгенийОрехов"
+  },
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com/issues"
+  },
+  "homepage": "https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com#readme",
+  "devDependencies": {
+    "csslint": "^0.10.0",
+    "htmlhint": "^0.9.12",
+    "jslinter": "^0.1.20151218",
+    "w3cjs": "^0.3.0"
+  },
+  "private": true
+}

@@ -1,5 +1,5 @@
 /*global chrome, NodeList */
-/*jslint browser: true */
+/*jslint browser, maxlen: 80 */
 
 (function () {
     "use strict";

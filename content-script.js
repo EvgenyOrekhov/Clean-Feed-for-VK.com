@@ -1,5 +1,5 @@
 /*global chrome, MutationObserver, scroll, NodeList */
-/*jslint browser: true, devel: true */
+/*jslint browser, devel, maxlen: 80 */
 
 (function () {
     "use strict";
