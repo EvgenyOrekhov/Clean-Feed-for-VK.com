@@ -1,7 +1,7 @@
 /*global chrome */
 /*jslint browser */
 
-(function () {
+(function main() {
     "use strict";
 
     var classNames = [
@@ -22,9 +22,11 @@
             myGroups: "[id^='post-'].post_copy { display: none; }",
             groupsAndPeople: "[id^='feed_repost'] { display: none; }",
 
-            filters: classNames.map(function (className) {
-                return ".cffvk-" + className;
-            }).join() + "{ display: none; }",
+            filters: classNames
+                .map(function buildSelector(className) {
+                    return ".cffvk-" + className;
+                })
+                .join() + "{ display: none; }",
 
             show: function show(rule) {
                 return rule.replace(/none/g, "block");
@@ -102,7 +104,7 @@
             return disable(sender.tab.id);
         }
 
-        chrome.storage.sync.get(function (loadedSettings) {
+        chrome.storage.sync.get(function applySettings(loadedSettings) {
             if (Object.keys(loadedSettings).length) {
                 settings = loadedSettings;
             } else {
@@ -114,15 +116,17 @@
         chrome.pageAction.show(sender.tab.id);
     }
 
-    chrome.runtime.onMessage.addListener(function (message, sender) {
-        if (message.action === "execute") {
-            settings = message.settings;
+    chrome.runtime.onMessage.addListener(
+        function handleMessage(message, sender) {
+            if (message.action === "execute") {
+                settings = message.settings;
 
-            return execute(message.tabId);
-        }
+                return execute(message.tabId);
+            }
 
-        if (message.action === "activate") {
-            activate(sender);
+            if (message.action === "activate") {
+                activate(sender);
+            }
         }
-    });
+    );
 }());

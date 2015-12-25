@@ -1,7 +1,7 @@
 /*global chrome, MutationObserver, scroll, NodeList */
 /*jslint browser, devel, maxlen: 80 */
 
-(function () {
+(function main() {
     "use strict";
 
     var qAndALinks = [
@@ -28,7 +28,7 @@
         selectorsToFind = {
 
             links: qAndALinks
-                .map(function (qAndALink) {
+                .map(function buildSelector(qAndALink) {
                     return ".wall_text [href*='" + qAndALink + "']";
                 })
                 .join(),
@@ -68,11 +68,11 @@
 
     function find(settingName) {
         var selector = selectorsToFind[settingName],
-            els = feed.querySelectorAll(selector),
+            elements = feed.querySelectorAll(selector),
             newClassName = "cffvk-" + settingName;
 
-        els.forEach(function (el) {
-            processFeedItem(el, settings[settingName], newClassName);
+        elements.forEach(function processElement(element) {
+            processFeedItem(element, settings[settingName], newClassName);
         });
     }
 
@@ -87,7 +87,7 @@
     function removeInlineStyles() {
         var posts = feed.querySelectorAll(".feed_row");
 
-        posts.forEach(function (post) {
+        posts.forEach(function removeInlineStyle(post) {
             post.removeAttribute("style");
         });
 
@@ -106,14 +106,14 @@
     NodeList.prototype.forEach = NodeList.prototype.forEach ||
             Array.prototype.forEach;
 
-    observer = new MutationObserver(function (mutations) {
+    observer = new MutationObserver(function processMutations(mutations) {
         if (mutations[0].addedNodes.length > 0) {
             clean();
             console.log("             by the MutationObserver");
         }
     });
 
-    chrome.runtime.onMessage.addListener(function (message) {
+    chrome.runtime.onMessage.addListener(function handleMessage(message) {
         if (message.action === "clean") {
             feed = document.querySelector("#feed_rows");
             observer.disconnect();

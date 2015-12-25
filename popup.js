@@ -1,7 +1,7 @@
 /*global chrome, NodeList */
 /*jslint browser, maxlen: 80 */
 
-(function () {
+(function main() {
     "use strict";
 
     function setUpTheSettingsPage(settings) {
@@ -15,7 +15,7 @@
                 linksLabel = document.querySelector("#links-label"),
                 linksCheckbox = linksLabel.children[0];
 
-            checkboxes.forEach(function (checkbox) {
+            checkboxes.forEach(function setDisabledState(checkbox) {
                 if (checkbox.name !== "is-disabled") {
                     checkbox.disabled = !!settings["is-disabled"];
                 }
@@ -24,7 +24,7 @@
             // If the first checkbox (`groups`) is unchecked
             // then uncheck the second and the third, hide them,
             // and reset their settings in storage:
-            labels2and3.forEach(function (label) {
+            labels2and3.forEach(function setLabels2and3(label) {
                 var checkbox = label.children[0];
 
                 if (settings.groups) {
@@ -63,7 +63,7 @@
                     currentWindow: true,
                     active: true
                 },
-                function (tabs) {
+                function sendMessage(tabs) {
                     chrome.runtime.sendMessage({
                         tabId: tabs[0].id,
                         action: "execute",
@@ -75,7 +75,7 @@
 
         hideOrShowSomeCheckboxes();
 
-        checkboxes.forEach(function (checkbox) {
+        checkboxes.forEach(function setUpCheckboxes(checkbox) {
             checkbox.addEventListener("click", handleClick);
             checkbox.checked = !!settings[checkbox.name];
         });
