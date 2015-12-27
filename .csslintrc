@@ -1,0 +1,2 @@
+--exclude-exts=.min.css
+--ignore=order-alphabetical
