@@ -6,6 +6,7 @@ const lint = require('./lint.js');
 const jslinter = require('jslinter');
 
 const files = [
+    'test/test.js',
     'test/lint.js',
     'test/jslint.js',
     'test/csslint.js',
@@ -26,9 +27,9 @@ function lintAndLogWarnings(data, logWarnings) {
     logWarnings(warnings);
 }
 
-function logWarning(file, warning) {
-    console.log(`${file} line ${warning.line} column ${warning.column}:
-    ${warning.message}`);
+function logWarning(warning) {
+    console.log(`    line ${warning.line} column ${warning.column}
+        ${warning.message}`);
 }
 
 console.log("Running JSLint...");

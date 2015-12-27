@@ -8,7 +8,7 @@
     "ВКонтакте"
   ],
   "scripts": {
-    "test": "node test/jslint.js && node test/csslint.js && node test/htmlhint.js && node test/w3cjs.js"
+    "test": "node test/test.js"
   },
   "repository": {
     "type": "git",

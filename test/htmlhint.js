@@ -15,9 +15,9 @@ function lintAndLogWarnings(data, logWarnings) {
     logWarnings(warnings);
 }
 
-function logWarning(file, warning) {
-    console.log(`${file} line ${warning.line} column ${warning.col}:
-    ${warning.message}`);
+function logWarning(warning) {
+    console.log(`    line ${warning.line} column ${warning.col}
+        ${warning.message}`);
 }
 
 console.log("Running HTMLHint...");

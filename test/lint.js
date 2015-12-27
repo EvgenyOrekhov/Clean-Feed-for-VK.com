@@ -6,15 +6,13 @@ const fs = require('fs');
 
 function readAndLintFiles(settings) {
     function readAndLintFile(file) {
-        function logWarning(warning) {
-            settings.logWarning(file, warning);
-        }
-
         function logWarnings(warnings) {
             if (warnings.length > 0) {
+                console.log();
+                console.log(file);
                 process.exitCode = 1;
             }
-            warnings.forEach(logWarning);
+            warnings.forEach(settings.logWarning);
         }
 
         function lintFile(err, data) {

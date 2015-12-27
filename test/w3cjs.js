@@ -23,9 +23,7 @@ function lintAndLogWarnings(data, logWarnings) {
     });
 }
 
-function logWarning(file, warning) {
-    console.log();
-    console.log(`${file}:`);
+function logWarning(warning) {
     console.log(warning);
 }
 
