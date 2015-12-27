@@ -6,7 +6,7 @@ const lint = require('./lint.js');
 const cssLint = require('csslint').CSSLint;
 
 const files = [
-    'popup.css'
+    'src/popup.css'
 ];
 
 function lintAndLogWarnings(data, logWarnings) {

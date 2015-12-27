@@ -6,7 +6,7 @@ const lint = require('./lint.js');
 const w3cjs = require('w3cjs');
 
 const files = [
-    'popup.html'
+    'src/popup.html'
 ];
 
 function lintAndLogWarnings(data, logWarnings) {

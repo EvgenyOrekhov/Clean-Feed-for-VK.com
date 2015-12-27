@@ -7,7 +7,7 @@ const htmlHint = require('htmlhint').HTMLHint;
 const rules = require('./htmlhintrc.json');
 
 const files = [
-    'popup.html'
+    'src/popup.html'
 ];
 
 function lintAndLogWarnings(data, logWarnings) {

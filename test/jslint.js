@@ -14,11 +14,11 @@ const files = [
     'test/htmlhint.js',
     'test/w3cjs.js',
 
-    'background.js',
-    'content-script.js',
-    'popup.js',
+    'src/background.js',
+    'src/content-script.js',
+    'src/popup.js',
+    'src/manifest.json',
 
-    'manifest.json',
     'package.json'
 ];
 
