@@ -2,41 +2,39 @@
 
 'use strict';
 
-const fs = require('fs');
+const lint = require('./lint.js');
 const jslinter = require('jslinter');
 
 const files = [
+    'test/lint.js',
     'test/jslint.js',
     'test/csslint.js',
+    'test/htmlhintrc.json',
     'test/htmlhint.js',
     'test/w3cjs.js',
+
     'background.js',
     'content-script.js',
     'popup.js',
+
     'manifest.json',
     'package.json'
 ];
 
-function readFile(file) {
-    function logWarning(warning) {
-        console.log(`${file} line ${warning.line} column ${warning.column}:
+function lintAndLogWarnings(data, logWarnings) {
+    const warnings = jslinter(data).warnings;
+    logWarnings(warnings);
+}
+
+function logWarning(file, warning) {
+    console.log(`${file} line ${warning.line} column ${warning.column}:
     ${warning.message}`);
-    }
-
-    function lintFile(err, data) {
-        if (err) {
-            throw err;
-        }
-        const result = jslinter(data);
-        if (!result.ok) {
-            process.exitCode = 1;
-        }
-        result.warnings.forEach(logWarning);
-    }
-
-    fs.readFile(file, 'utf8', lintFile);
 }
 
 console.log("Running JSLint...");
 
-files.forEach(readFile);
+lint({
+    files: files,
+    lintAndLogWarnings: lintAndLogWarnings,
+    logWarning: logWarning
+});
