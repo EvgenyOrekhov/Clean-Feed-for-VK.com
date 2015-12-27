@@ -10,7 +10,6 @@ const files = [
     'test/lint.js',
     'test/jslint.js',
     'test/csslint.js',
-    'test/htmlhintrc.json',
     'test/htmlhint.js',
     'test/w3cjs.js',
 
@@ -19,6 +18,7 @@ const files = [
     'src/popup.js',
     'src/manifest.json',
 
+    '.htmlhintrc',
     'package.json'
 ];
 
