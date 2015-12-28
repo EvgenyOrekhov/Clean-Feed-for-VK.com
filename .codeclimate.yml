@@ -2,8 +2,6 @@
 engines:
     csslint:
         enabled: true
-    eslint:
-        enabled: true
     fixme:
         enabled: true
     duplication:
