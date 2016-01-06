@@ -8,7 +8,7 @@
     "ВКонтакте"
   ],
   "scripts": {
-    "test": "node test/test.js"
+    "test": "lints"
   },
   "repository": {
     "type": "git",
@@ -24,10 +24,7 @@
   },
   "homepage": "https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com#readme",
   "devDependencies": {
-    "csslint": "^0.10.0",
-    "htmlhint": "^0.9.12",
-    "jslinter": "^0.1.20151218",
-    "w3cjs": "^0.3.0"
+    "lints": "^1.0.0"
   },
   "private": true
 }
