@@ -1,5 +1,10 @@
 /*global chrome */
 /*jslint browser */
+/*eslint
+    camelcase: 0,
+    no-magic-numbers: 0,
+    max-len: 0
+*/
 
 (function main() {
     "use strict";

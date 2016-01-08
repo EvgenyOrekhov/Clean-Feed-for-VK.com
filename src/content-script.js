@@ -1,5 +1,6 @@
 /*global chrome, MutationObserver, scroll, NodeList */
 /*jslint browser, devel, maxlen: 80 */
+/*eslint camelcase: 0 */
 
 (function main() {
     "use strict";
@@ -47,6 +48,7 @@
         },
         feed = document.querySelector("#feed_rows"),
         url = location.href,
+        urlCheckInterval = 100,
         observer,
         settings;
 
@@ -136,5 +138,5 @@
     chrome.runtime.sendMessage({
         action: "activate"
     });
-    setInterval(checkUrl, 100);
+    setInterval(checkUrl, urlCheckInterval);
 }());
