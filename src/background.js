@@ -10,40 +10,40 @@
     "use strict";
 
     var classNames = [
-            "external_links",
-            "links",
-            "apps",
-            "instagram",
-            "group_share",
-            "mem_link",
-            "event_share",
-            "wall_post_more",
-            "likes",
-            "comments"
-        ],
-        css = {
-            groups: "[id^='feed_repost-'], [id^='feed_reposts_'] " +
-                    "{ display: none; }",
-            myGroups: "[id^='post-'].post_copy { display: none; }",
-            groupsAndPeople: "[id^='feed_repost'] { display: none; }",
+        "external_links",
+        "links",
+        "apps",
+        "instagram",
+        "group_share",
+        "mem_link",
+        "event_share",
+        "wall_post_more",
+        "likes",
+        "comments"
+    ];
+    var css = {
+        groups: "[id^='feed_repost-'], [id^='feed_reposts_'] " +
+                "{ display: none; }",
+        myGroups: "[id^='post-'].post_copy { display: none; }",
+        groupsAndPeople: "[id^='feed_repost'] { display: none; }",
 
-            filters: classNames
-                .map(function buildSelector(className) {
-                    return ".cffvk-" + className;
-                })
-                .join() + "{ display: none; }",
+        filters: classNames
+            .map(function buildSelector(className) {
+                return ".cffvk-" + className;
+            })
+            .join() + "{ display: none; }",
 
-            show: function show(rule) {
-                return rule.replace(/none/g, "block");
-            }
-        },
-        settings = {
-            groups: true,
-            links: true,
-            apps: true,
-            group_share: true,
-            event_share: true
-        };
+        show: function show(rule) {
+            return rule.replace(/none/g, "block");
+        }
+    };
+    var settings = {
+        groups: true,
+        links: true,
+        apps: true,
+        group_share: true,
+        event_share: true
+    };
 
     function disable(tabId) {
         chrome.pageAction.setIcon({
@@ -65,19 +65,19 @@
 
     // The main function
     function execute(tabId) {
-        var cssCode = css.show(css.groupsAndPeople + css.myGroups);
-
         if (settings["is-disabled"]) {
             return disable(tabId);
         }
 
+        var cssCode = css.show(css.groupsAndPeople + css.myGroups);
+
         if (settings.groups) {
             var peopleCssCode = settings.people
-                    ? css.groupsAndPeople
-                    : css.show(css.groupsAndPeople) + css.groups,
-                myGroupsCssCode = settings.mygroups
-                    ? css.myGroups
-                    : css.show(css.myGroups);
+                ? css.groupsAndPeople
+                : css.show(css.groupsAndPeople) + css.groups;
+            var myGroupsCssCode = settings.mygroups
+                ? css.myGroups
+                : css.show(css.myGroups);
 
             cssCode = peopleCssCode + myGroupsCssCode;
         }
@@ -86,8 +86,7 @@
             tabId: tabId,
             path: "icon16.png"
         });
-        chrome.tabs.insertCSS(tabId, {code: css.filters});
-        chrome.tabs.insertCSS(tabId, {code: cssCode});
+        chrome.tabs.insertCSS(tabId, {code: cssCode + css.filters});
         chrome.tabs.sendMessage(tabId, {
             action: "clean",
             settings: settings

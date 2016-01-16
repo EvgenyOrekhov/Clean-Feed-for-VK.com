@@ -7,13 +7,20 @@
     function setUpTheSettingsPage(settings) {
         var checkboxes = document.querySelectorAll("input");
 
+        function hideLabel(label) {
+            var checkbox = label.children[0];
+
+            label.style.display = "none";
+            checkbox.checked = false;
+            settings[checkbox.name] = false;
+        }
+
         function hideOrShowSomeCheckboxes() {
             var labels2and3 = [
-                    document.querySelector("#mygroups-label"),
-                    document.querySelector("#people-label")
-                ],
-                linksLabel = document.querySelector("#links-label"),
-                linksCheckbox = linksLabel.children[0];
+                document.querySelector("#mygroups-label"),
+                document.querySelector("#people-label")
+            ];
+            var linksLabel = document.querySelector("#links-label");
 
             checkboxes.forEach(function setDisabledState(checkbox) {
                 if (checkbox.name !== "is-disabled") {
@@ -25,28 +32,20 @@
             // then uncheck the second and the third, hide them,
             // and reset their settings in storage:
             labels2and3.forEach(function setLabels2and3(label) {
-                var checkbox = label.children[0];
-
                 if (settings.groups) {
                     label.style.display = "block";
 
                     return;
                 }
 
-                label.style.display = "none";
-                checkbox.checked = false;
-                settings[checkbox.name] = false;
+                hideLabel(label);
             });
 
             // If the `external_links` checkbox is checked
             // then uncheck the `links` checkbox, hide it,
             // and reset its setting in storage:
             if (settings.external_links) {
-                linksLabel.style.display = "none";
-                linksCheckbox.checked = false;
-                settings[linksCheckbox.name] = false;
-
-                return;
+                return hideLabel(linksLabel);
             }
 
             linksLabel.style.display = "block";
@@ -75,7 +74,7 @@
 
         hideOrShowSomeCheckboxes();
 
-        checkboxes.forEach(function setUpCheckboxes(checkbox) {
+        checkboxes.forEach(function setUpCheckbox(checkbox) {
             checkbox.addEventListener("click", handleClick);
             checkbox.checked = !!settings[checkbox.name];
         });

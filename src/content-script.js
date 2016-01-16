@@ -1,88 +1,82 @@
 /*global chrome, MutationObserver, scroll, NodeList */
 /*jslint browser, devel, maxlen: 80 */
-/*eslint camelcase: 0 */
+/*eslint camelcase: 0, max-statements: 0 */
 
 (function main() {
     "use strict";
 
     var qAndALinks = [
-            "ask.fm",
-            "askbook.me",
-            "askfm.im",
-            "askfm.su",
-            "askmes.ru",
-            "askzone.su",
-            "my-truth.ru",
-            "nekto.me",
-            "otvechayu.ru",
-            "qroom.ru",
-            "sprashivai.by",
-            "sprashivai.ru",
-            "sprashivaii.ru",
-            "sprashivalka.com",
-            "spring.me",
-            "sprosimenya.com",
-            "sprosi.name",
-            "vopros.me",
-            "voprosmne.ru"
-        ],
-        selectorsToFind = {
+        "ask.fm",
+        "askbook.me",
+        "askfm.im",
+        "askfm.su",
+        "askmes.ru",
+        "askzone.su",
+        "my-truth.ru",
+        "nekto.me",
+        "otvechayu.ru",
+        "qroom.ru",
+        "sprashivai.by",
+        "sprashivai.ru",
+        "sprashivaii.ru",
+        "sprashivalka.com",
+        "spring.me",
+        "sprosimenya.com",
+        "sprosi.name",
+        "vopros.me",
+        "voprosmne.ru"
+    ];
+    var selectors = {
 
-            links: qAndALinks
-                .map(function buildSelector(qAndALink) {
-                    return ".wall_text [href*='" + qAndALink + "']";
-                })
-                .join(),
+        links: qAndALinks
+            .map(function buildSelector(qAndALink) {
+                return ".wall_text [href*='" + qAndALink + "']";
+            })
+            .join(),
 
-            apps: ".wall_post_source_default",
-            instagram: ".wall_post_source_instagram",
-            group_share: ".group_share",
-            mem_link: ".mem_link[mention_id^='club']",
-            event_share: ".event_share",
-            external_links:
-                    ".wall_text [href^='/away.php?to=']" +
-                    ":not(.wall_post_source_icon)",
-            wall_post_more: ".wall_post_more",
-            likes: ".post_like_icon.no_likes",
-            comments: ".reply_link"
-        },
-        feed = document.querySelector("#feed_rows"),
-        url = location.href,
-        urlCheckInterval = 100,
-        observer,
-        settings;
+        apps: ".wall_post_source_default",
+        instagram: ".wall_post_source_instagram",
+        group_share: ".group_share",
+        mem_link: ".mem_link[mention_id^='club']",
+        event_share: ".event_share",
+        external_links:
+                ".wall_text [href^='/away.php?to=']" +
+                ":not(.wall_post_source_icon)",
+        wall_post_more: ".wall_post_more",
+        likes: ".post_like_icon.no_likes",
+        comments: ".reply_link"
+    };
+    var feed = document.querySelector("#feed_rows");
+    var settings;
 
-    function processFeedItem(elem, setting, newClassName) {
-        if (elem === feed) {
+    function processFeedItem(element, settingName) {
+        if (element === feed) {
             return;
         }
 
-        if (!elem.classList.contains("feed_row")) {
-            return processFeedItem(elem.parentNode, setting, newClassName);
+        if (!element.classList.contains("feed_row")) {
+            return processFeedItem(element.parentNode, settingName);
         }
 
-        if (setting) {
-            return elem.classList.add(newClassName);
+        var newClassName = "cffvk-" + settingName;
+
+        if (settings[settingName]) {
+            return element.classList.add(newClassName);
         }
 
-        elem.classList.remove(newClassName);
+        element.classList.remove(newClassName);
     }
 
     function find(settingName) {
-        var selector = selectorsToFind[settingName],
-            elements = feed.querySelectorAll(selector),
-            newClassName = "cffvk-" + settingName;
+        var elements = feed.querySelectorAll(selectors[settingName]);
 
         elements.forEach(function processElement(element) {
-            processFeedItem(element, settings[settingName], newClassName);
+            processFeedItem(element, settingName);
         });
     }
 
-    function clean(receivedSettings) {
-        if (receivedSettings) {
-            settings = receivedSettings;
-        }
-        Object.keys(selectorsToFind).forEach(find);
+    function clean() {
+        Object.keys(selectors).forEach(find);
         console.log("CFFVK: your feed has been cleaned");
     }
 
@@ -96,19 +90,26 @@
         scroll(0, 0);
     }
 
-    function checkUrl() {
-        if (url !== location.href) {
-            url = location.href;
-            chrome.runtime.sendMessage({
-                action: "activate"
-            });
+    function startUrlCheck() {
+        var url = location.href;
+        var intervalDuration = 100;
+
+        function checkUrl() {
+            if (url !== location.href) {
+                url = location.href;
+                chrome.runtime.sendMessage({
+                    action: "activate"
+                });
+            }
         }
+
+        setInterval(checkUrl, intervalDuration);
     }
 
     NodeList.prototype.forEach = NodeList.prototype.forEach ||
             Array.prototype.forEach;
 
-    observer = new MutationObserver(function processMutations(mutations) {
+    var observer = new MutationObserver(function processMutations(mutations) {
         if (mutations[0].addedNodes.length > 0) {
             clean();
             console.log("             by the MutationObserver");
@@ -125,8 +126,9 @@
             });
             document.querySelector("#feed_new_posts")
                 .addEventListener("click", removeInlineStyles);
+            settings = message.settings;
 
-            return clean(message.settings);
+            return clean();
         }
 
         if (message.action === "disable") {
@@ -138,5 +140,5 @@
     chrome.runtime.sendMessage({
         action: "activate"
     });
-    setInterval(checkUrl, urlCheckInterval);
+    startUrlCheck();
 }());
