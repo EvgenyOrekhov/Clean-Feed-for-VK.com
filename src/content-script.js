@@ -49,30 +49,29 @@
     var feed = document.querySelector("#feed_rows");
     var settings;
 
-    function processFeedItem(element, settingName) {
-        if (element === feed) {
-            return;
-        }
-
-        if (!element.classList.contains("feed_row")) {
-            return processFeedItem(element.parentNode, settingName);
-        }
-
+    function processFeedRow(feedRow, settingName) {
         var newClassName = "cffvk-" + settingName;
 
         if (settings[settingName]) {
-            return element.classList.add(newClassName);
+            return feedRow.classList.add(newClassName);
         }
 
-        element.classList.remove(newClassName);
+        feedRow.classList.remove(newClassName);
     }
 
     function find(settingName) {
         var elements = feed.querySelectorAll(selectors[settingName]);
 
-        elements.forEach(function processElement(element) {
-            processFeedItem(element, settingName);
-        });
+        elements
+            .map(function getClosestFeedRow(element) {
+                return element.closest(".feed_row");
+            })
+            .filter(function filterNulls(element) {
+                return element;
+            })
+            .forEach(function processElement(feedRow) {
+                processFeedRow(feedRow, settingName);
+            });
     }
 
     function clean() {
@@ -108,6 +107,8 @@
 
     NodeList.prototype.forEach = NodeList.prototype.forEach ||
             Array.prototype.forEach;
+    NodeList.prototype.map = NodeList.prototype.map ||
+            Array.prototype.map;
 
     var observer = new MutationObserver(function processMutations(mutations) {
         if (mutations[0].addedNodes.length > 0) {
