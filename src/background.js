@@ -2,7 +2,6 @@
 /*jslint browser */
 /*eslint
     camelcase: 0,
-    no-magic-numbers: 0,
     max-len: 0
 */
 
@@ -94,12 +93,14 @@
     }
 
     function activate(sender) {
+        var notFoundIndex = -1;
+
         if (/\/feed\?[wz]=/.test(sender.tab.url)) {
             return;
         }
 
         if (
-            sender.tab.url.indexOf("vk.com/feed") === -1 ||
+            sender.tab.url.indexOf("vk.com/feed") === notFoundIndex ||
             (/photos|videos|articles|likes|notifications|comments|updates|replies/)
                 .test(sender.tab.url)
         ) {
