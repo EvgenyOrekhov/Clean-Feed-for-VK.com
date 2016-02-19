@@ -49,17 +49,17 @@
     var feed = document.querySelector("#feed_rows");
     var settings;
 
-    function processFeedRow(feedRow, settingName) {
-        var newClassName = "cffvk-" + settingName;
+    function find(settingName) {
+        function processFeedRow(feedRow) {
+            var newClassName = "cffvk-" + settingName;
 
-        if (settings[settingName]) {
-            return feedRow.classList.add(newClassName);
+            if (settings[settingName]) {
+                return feedRow.classList.add(newClassName);
+            }
+
+            feedRow.classList.remove(newClassName);
         }
 
-        feedRow.classList.remove(newClassName);
-    }
-
-    function find(settingName) {
         var elements = feed.querySelectorAll(selectors[settingName]);
 
         elements
@@ -69,9 +69,7 @@
             .filter(function filterNulls(element) {
                 return element;
             })
-            .forEach(function processElement(feedRow) {
-                processFeedRow(feedRow, settingName);
-            });
+            .forEach(processFeedRow);
     }
 
     function clean() {

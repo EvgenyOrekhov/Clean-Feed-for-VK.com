@@ -52,9 +52,7 @@
 
         // Show all the divs that have been hidden, stop observing:
         chrome.tabs.insertCSS(tabId, {
-            code: css.show(
-                css.groupsAndPeople + css.myGroups + css.filters
-            )
+            code: css.show(css.groupsAndPeople + css.myGroups + css.filters)
         });
 
         chrome.tabs.sendMessage(tabId, {
