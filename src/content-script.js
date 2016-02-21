@@ -30,7 +30,7 @@
 
         links: qAndALinks
             .map(function buildSelector(qAndALink) {
-                return ".wall_text [href*='" + qAndALink + "']";
+                return `.wall_text [href*="${qAndALink}"]`;
             })
             .join(),
 
@@ -51,7 +51,7 @@
 
     function find(settingName) {
         function processFeedRow(feedRow) {
-            const newClassName = "cffvk-" + settingName;
+            const newClassName = `cffvk-${settingName}`;
 
             if (settings[settingName]) {
                 return feedRow.classList.add(newClassName);

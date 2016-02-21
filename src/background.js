@@ -20,17 +20,18 @@
         "likes",
         "comments"
     ];
+    const cffvkFiltersSelector = classNames
+        .map(function buildSelector(className) {
+            return `.cffvk-${className}`;
+        })
+        .join();
     const css = {
         groups: "[id^='feed_repost-'], [id^='feed_reposts_'] " +
                 "{ display: none; }",
         myGroups: "[id^='post-'].post_copy { display: none; }",
         groupsAndPeople: "[id^='feed_repost'] { display: none; }",
 
-        filters: classNames
-            .map(function buildSelector(className) {
-                return ".cffvk-" + className;
-            })
-            .join() + "{ display: none; }",
+        filters: `${cffvkFiltersSelector} { display: none; }`,
 
         show: function show(rule) {
             return rule.replace(/none/g, "block");
