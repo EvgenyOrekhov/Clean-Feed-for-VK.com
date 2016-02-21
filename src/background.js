@@ -1,5 +1,5 @@
 /*global chrome */
-/*jslint browser */
+/*jslint browser, es6 */
 /*eslint
     camelcase: 0,
     max-len: 0
@@ -8,7 +8,7 @@
 (function main() {
     "use strict";
 
-    var classNames = [
+    const classNames = [
         "external_links",
         "links",
         "apps",
@@ -20,7 +20,7 @@
         "likes",
         "comments"
     ];
-    var css = {
+    const css = {
         groups: "[id^='feed_repost-'], [id^='feed_reposts_'] " +
                 "{ display: none; }",
         myGroups: "[id^='post-'].post_copy { display: none; }",
@@ -36,7 +36,7 @@
             return rule.replace(/none/g, "block");
         }
     };
-    var settings = {
+    let settings = {
         groups: true,
         links: true,
         apps: true,
@@ -66,13 +66,13 @@
             return disable(tabId);
         }
 
-        var cssCode = css.show(css.groupsAndPeople + css.myGroups);
+        let cssCode = css.show(css.groupsAndPeople + css.myGroups);
 
         if (settings.groups) {
-            var peopleCssCode = settings.people
+            const peopleCssCode = settings.people
                 ? css.groupsAndPeople
                 : css.show(css.groupsAndPeople) + css.groups;
-            var myGroupsCssCode = settings.mygroups
+            const myGroupsCssCode = settings.mygroups
                 ? css.myGroups
                 : css.show(css.myGroups);
 
@@ -91,14 +91,12 @@
     }
 
     function activate(sender) {
-        var notFoundIndex = -1;
-
         if (/\/feed\?[wz]=/.test(sender.tab.url)) {
             return;
         }
 
         if (
-            sender.tab.url.indexOf("vk.com/feed") === notFoundIndex ||
+            !sender.tab.url.includes("vk.com/feed") ||
             (/photos|videos|articles|likes|notifications|comments|updates|replies/)
                 .test(sender.tab.url)
         ) {

@@ -1,14 +1,14 @@
 /*global chrome, NodeList */
-/*jslint browser, maxlen: 80 */
+/*jslint browser, es6, maxlen: 80 */
 
 (function main() {
     "use strict";
 
     function setUpTheSettingsPage(settings) {
-        var checkboxes = document.querySelectorAll("input");
+        const checkboxes = document.querySelectorAll("input");
 
         function hideLabel(label) {
-            var checkbox = label.children[0];
+            const checkbox = label.children[0];
 
             label.style.display = "none";
             checkbox.checked = false;
@@ -16,11 +16,11 @@
         }
 
         function hideOrShowSomeCheckboxes() {
-            var labels2and3 = [
+            const labels2and3 = [
                 document.querySelector("#mygroups-label"),
                 document.querySelector("#people-label")
             ];
-            var linksLabel = document.querySelector("#links-label");
+            const linksLabel = document.querySelector("#links-label");
 
             checkboxes.forEach(function setDisabledState(checkbox) {
                 if (checkbox.name !== "is-disabled") {

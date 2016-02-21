@@ -110,7 +110,7 @@
         "no-useless-call": 2,
         "no-useless-concat": 2,
         "no-void": 2,
-        "no-var": 0,
+        "no-var": 2,
         "no-warning-comments": 2,
         "no-with": 2,
         "no-magic-numbers": [2, {"ignore": [0]}],

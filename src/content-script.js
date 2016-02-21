@@ -1,11 +1,11 @@
 /*global chrome, MutationObserver, scroll, NodeList */
-/*jslint browser, devel, maxlen: 80 */
+/*jslint browser, es6, devel, maxlen: 80 */
 /*eslint camelcase: 0, max-statements: 0 */
 
 (function main() {
     "use strict";
 
-    var qAndALinks = [
+    const qAndALinks = [
         "ask.fm",
         "askbook.me",
         "askfm.im",
@@ -26,7 +26,7 @@
         "vopros.me",
         "voprosmne.ru"
     ];
-    var selectors = {
+    const selectors = {
 
         links: qAndALinks
             .map(function buildSelector(qAndALink) {
@@ -46,12 +46,12 @@
         likes: ".post_like_icon.no_likes",
         comments: ".reply_link"
     };
-    var feed = document.querySelector("#feed_rows");
-    var settings;
+    let feed = document.querySelector("#feed_rows");
+    let settings;
 
     function find(settingName) {
         function processFeedRow(feedRow) {
-            var newClassName = "cffvk-" + settingName;
+            const newClassName = "cffvk-" + settingName;
 
             if (settings[settingName]) {
                 return feedRow.classList.add(newClassName);
@@ -60,7 +60,7 @@
             feedRow.classList.remove(newClassName);
         }
 
-        var elements = feed.querySelectorAll(selectors[settingName]);
+        const elements = feed.querySelectorAll(selectors[settingName]);
 
         elements
             .map(function getClosestFeedRow(element) {
@@ -78,7 +78,7 @@
     }
 
     function removeInlineStyles() {
-        var posts = feed.querySelectorAll(".feed_row");
+        const posts = feed.querySelectorAll(".feed_row");
 
         posts.forEach(function removeInlineStyle(post) {
             post.removeAttribute("style");
@@ -88,8 +88,8 @@
     }
 
     function startUrlCheck() {
-        var url = location.href;
-        var intervalDuration = 100;
+        let url = location.href;
+        const intervalDuration = 100;
 
         function checkUrl() {
             if (url !== location.href) {
@@ -108,7 +108,7 @@
     NodeList.prototype.map = NodeList.prototype.map ||
             Array.prototype.map;
 
-    var observer = new MutationObserver(function processMutations(mutations) {
+    const observer = new MutationObserver(function processMutations(mutations) {
         if (mutations[0].addedNodes.length > 0) {
             clean();
             console.log("             by the MutationObserver");
