@@ -36,15 +36,15 @@
 
         apps: ".wall_post_source_default",
         instagram: ".wall_post_source_instagram",
-        group_share: ".group_share",
+        group_share: ".page_group_share",
         mem_link: ".mem_link[mention_id^='club']",
         event_share: ".event_share",
         external_links:
                 ".wall_text [href^='/away.php?to=']" +
                 ":not(.wall_post_source_icon)",
         wall_post_more: ".wall_post_more",
-        likes: ".post_like_icon.no_likes",
-        comments: ".reply_link"
+        likes: ".post_like.no_likes",
+        comments: ".reply_link:not(._reply_lnk)"
     };
     let feed = document.querySelector("#feed_rows");
     let settings;
