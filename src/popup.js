@@ -66,7 +66,7 @@
                     chrome.runtime.sendMessage({
                         tabId: tabs[0].id,
                         action: "execute",
-                        settings: settings
+                        settings
                     });
                 }
             );

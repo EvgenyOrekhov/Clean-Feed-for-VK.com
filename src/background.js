@@ -47,7 +47,7 @@
 
     function disable(tabId) {
         chrome.pageAction.setIcon({
-            tabId: tabId,
+            tabId,
             path: "disabled-icon16.png"
         });
 
@@ -81,13 +81,13 @@
         }
 
         chrome.pageAction.setIcon({
-            tabId: tabId,
+            tabId,
             path: "icon16.png"
         });
         chrome.tabs.insertCSS(tabId, {code: cssCode + css.filters});
         chrome.tabs.sendMessage(tabId, {
             action: "clean",
-            settings: settings
+            settings
         });
     }
 
