@@ -1,4 +1,5 @@
 {
+    "extends": "eslint:recommended",
     "parserOptions": {
         "ecmaVersion": 2015,
         "sourceType": "script",
@@ -46,7 +47,7 @@
         "no-catch-shadow": "error",
         "no-class-assign": "error",
         "no-cond-assign": "error",
-        "no-console": "off",
+        "no-console": "error",
         "no-const-assign": "error",
         "no-constant-condition": "error",
         "no-continue": "error",
@@ -73,7 +74,7 @@
         "no-fallthrough": "error",
         "no-floating-decimal": "error",
         "no-func-assign": "error",
-        "no-implicit-coercion": "off",
+        "no-implicit-coercion": "error",
         "no-implied-eval": "error",
         "no-inline-comments": "error",
         "no-inner-declarations": "error",
@@ -182,7 +183,10 @@
         "eol-last": "error",
         "eqeqeq": "error",
         "func-names": "error",
-        "func-style": "off",
+        "func-style": [
+            "error",
+            "declaration"
+        ],
         "generator-star-spacing": "error",
         "global-require": "error",
         "guard-for-in": "error",
@@ -206,14 +210,23 @@
         "one-var": "off",
         "operator-assignment": "error",
         "operator-linebreak": "off",
-        "padded-blocks": "off",
+        "padded-blocks": [
+            "error",
+            "never"
+        ],
         "prefer-arrow-callback": "off",
         "prefer-const": "error",
         "prefer-spread": "error",
         "prefer-reflect": "error",
         "prefer-template": "error",
         "quote-props": "off",
-        "quotes": "off",
+        "quotes": [
+            "error",
+            "double",
+            {
+                "allowTemplateLiterals": true
+            }
+        ],
         "radix": "error",
         "id-match": "off",
         "require-jsdoc": "off",
@@ -223,7 +236,13 @@
         "sort-vars": "off",
         "keyword-spacing": "error",
         "space-before-blocks": "error",
-        "space-before-function-paren": "off",
+        "space-before-function-paren": [
+            "error",
+            {
+                "anonymous": "always",
+                "named": "never"
+            }
+        ],
         "space-in-parens": "error",
         "space-infix-ops": "error",
         "space-unary-ops": "error",
@@ -253,7 +272,7 @@
         "one-var-declaration-per-line": "error",
         "id-blacklist": "off",
         "sort-imports": "off",
-        "yield-star-spacing": "off",
+        "yield-star-spacing": "error",
         "newline-before-return": "error",
         "no-useless-escape": "error",
         "max-statements-per-line": "error",
@@ -264,7 +283,7 @@
         "no-useless-rename": "error",
         "unicode-bom": "error",
         "no-prototype-builtins": "off",
-        "no-mixed-operators": "off",
+        "no-mixed-operators": "error",
         "rest-spread-spacing": "error",
         "max-lines": "error",
         "object-curly-newline": "off",
@@ -273,7 +292,7 @@
         "sort-keys": "off",
         "no-template-curly-in-string": "error",
         "symbol-description": "error",
-        "class-methods-use-this": "off",
+        "class-methods-use-this": "error",
         "prefer-numeric-literals": "error",
         "no-restricted-properties": "off",
         "line-comment-position": "error",

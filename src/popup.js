@@ -24,7 +24,7 @@
 
             checkboxes.forEach(function setDisabledState(checkbox) {
                 if (checkbox.name !== "is-disabled") {
-                    checkbox.disabled = !!settings["is-disabled"];
+                    checkbox.disabled = Boolean(settings["is-disabled"]);
                 }
             });
 
@@ -76,7 +76,7 @@
 
         checkboxes.forEach(function setUpCheckbox(checkbox) {
             checkbox.addEventListener("click", handleClick);
-            checkbox.checked = !!settings[checkbox.name];
+            checkbox.checked = Boolean(settings[checkbox.name]);
         });
     }
 

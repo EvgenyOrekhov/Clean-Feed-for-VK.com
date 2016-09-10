@@ -1,9 +1,6 @@
 /*global chrome */
 /*jslint browser, es6 */
-/*eslint
-    camelcase: 0,
-    max-len: 0
-*/
+/*eslint camelcase: "off", max-len: "off" */
 
 (function main() {
     "use strict";

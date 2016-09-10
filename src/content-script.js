@@ -1,6 +1,6 @@
 /*global chrome, MutationObserver, scroll, NodeList */
 /*jslint browser, es6, devel, maxlen: 80 */
-/*eslint camelcase: 0, max-statements: 0 */
+/*eslint camelcase: "off", max-statements: "off", no-console: "off" */
 
 (function main() {
     "use strict";
