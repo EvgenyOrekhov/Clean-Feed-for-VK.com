@@ -25,7 +25,7 @@
   "homepage": "https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com#readme",
   "devDependencies": {
     "eslint-config-hardcore": "^1.0.2",
-    "lints": "^6.0.0"
+    "lints": "^7.0.0"
   },
   "private": true
 }
