@@ -2,5 +2,11 @@
     "extends": "hardcore",
     "env": {
         "browser": true
+    },
+    "rules": {
+        "complexity": [
+            "error",
+            5
+        ]
     }
 }
