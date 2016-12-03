@@ -66,8 +66,13 @@
             .map(function getClosestFeedRow(element) {
                 return element.closest(".feed_row");
             })
-            .filter(function filterNulls(element) {
+            .filter(function isTruthy(element) {
                 return element;
+            })
+            .filter(function isNotAd(element) {
+                return element.querySelector(
+                    ".wall_text_name_explain_promoted_post, .ads_ads_news_wrap"
+                ) === null;
             })
             .forEach(processFeedRow);
     }
