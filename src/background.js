@@ -10,6 +10,7 @@
         "links",
         "apps",
         "instagram",
+        "video",
         "group_share",
         "mem_link",
         "event_share",

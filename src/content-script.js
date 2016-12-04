@@ -36,6 +36,7 @@
 
         apps: ".wall_post_source_default",
         instagram: ".wall_post_source_instagram",
+        video: ".wall_text .page_post_thumb_video",
         group_share: ".page_group_share",
         mem_link: ".mem_link[mention_id^='club']",
         event_share: ".event_share",
