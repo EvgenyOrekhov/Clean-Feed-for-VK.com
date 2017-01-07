@@ -7,6 +7,7 @@
         "complexity": [
             "error",
             5
-        ]
+        ],
+        "prefer-destructuring": "off"
     }
 }
