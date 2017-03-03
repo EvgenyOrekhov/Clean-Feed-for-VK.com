@@ -1,4 +1,21 @@
 {
+    "global": {
+        "ignore": [
+            "node_modules/**",
+            "bower_components/**",
+            "jspm_packages/**",
+            ".npm/**",
+            "vendor/**",
+
+            "lib-cov/**",
+            "coverage/**",
+            ".nyc_output/**",
+
+            "**/*.min.js",
+            "**/*.min.css"
+        ]
+    },
+
     "jslint": {
         "files": [
             "**/*.js",
@@ -9,52 +26,44 @@
             "**/*.yml",
             "**/.*.yml"
         ],
-        "ignore": [
-            "node_modules/**",
-            "**/*.min.js"
-        ],
+        "ignore": [],
         "rcFile": ".jslintrc"
     },
+
     "eslint": {
         "files": [
             "**/*.js"
         ],
-        "ignore": [
-            "node_modules/**",
-            "**/*.min.js"
-        ],
+        "ignore": [],
         "rcFile": ".eslintrc.json"
     },
+
     "csslint": {
         "files": [
             "**/*.css"
         ],
-        "ignore": [
-            "node_modules/**",
-            "**/*.min.css"
-        ],
+        "ignore": [],
         "rcFile": ".csslintrc"
     },
+
     "htmlhint": {
         "files": [
             "**/*.html",
             "**/*.htm"
         ],
-        "ignore": [
-            "node_modules/**"
-        ],
+        "ignore": [],
         "rcFile": ".htmlhintrc"
     },
+
     "w3cjs": {
         "files": [
             "**/*.html",
             "**/*.htm"
         ],
-        "ignore": [
-            "node_modules/**"
-        ],
+        "ignore": [],
         "rcFile": null
     },
+
     "markdownlint": {
         "files": [
             "**/*.markdown",
@@ -67,11 +76,10 @@
             "**/*.mdtext",
             "**/*.rmd"
         ],
-        "ignore": [
-            "node_modules/**"
-        ],
+        "ignore": [],
         "rcFile": ".markdownlint.json"
     },
+
     "remark-lint": {
         "files": [
             "**/*.markdown",
@@ -84,9 +92,7 @@
             "**/*.mdtext",
             "**/*.rmd"
         ],
-        "ignore": [
-            "node_modules/**"
-        ],
+        "ignore": [],
         "rcFile": ".remarkrc"
     }
 }
