@@ -1,31 +1,31 @@
 {
-  "name": "clean-feed-for-vk.com",
-  "version": "1.12.0",
-  "description": "Расширение для Google Chrome, которое очищает захламлённые новости ВКонтакте от отстойных репостов ваших друзей",
-  "keywords": [
-    "VK",
-    "ВК",
-    "ВКонтакте"
-  ],
-  "scripts": {
-    "test": "lints"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com.git"
-  },
-  "author": {
-    "name": "Evgeny Orekhov",
-    "url": "https://plus.google.com/+ЕвгенийОрехов"
-  },
-  "license": "AGPL-3.0",
-  "bugs": {
-    "url": "https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com/issues"
-  },
-  "homepage": "https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com#readme",
-  "devDependencies": {
-    "eslint-config-hardcore": "^1.11.0",
-    "lints": "^11.1.0"
-  },
-  "private": true
+    "name": "clean-feed-for-vk.com",
+    "version": "1.12.0",
+    "description": "Расширение для Google Chrome, которое очищает захламлённые новости ВКонтакте от отстойных репостов ваших друзей",
+    "keywords": [
+        "VK",
+        "ВК",
+        "ВКонтакте"
+    ],
+    "scripts": {
+        "test": "lints"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com.git"
+    },
+    "author": {
+        "name": "Evgeny Orekhov",
+        "url": "https://plus.google.com/+ЕвгенийОрехов"
+    },
+    "license": "AGPL-3.0",
+    "bugs": {
+        "url": "https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com/issues"
+    },
+    "homepage": "https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com#readme",
+    "devDependencies": {
+        "eslint-config-hardcore": "^1.11.0",
+        "lints": "^11.1.0"
+    },
+    "private": true
 }
