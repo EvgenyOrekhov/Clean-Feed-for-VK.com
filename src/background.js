@@ -110,6 +110,7 @@
             } else {
                 chrome.storage.sync.set(settings);
             }
+
             execute(sender.tab.id);
         });
 
