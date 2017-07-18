@@ -41,8 +41,8 @@
         mem_link: ".mem_link[mention_id^='club']",
         event_share: ".event_share",
         external_links:
-                ".wall_text [href^='/away.php?to=']" +
-                ":not(.wall_post_source_icon)",
+                ".wall_text [href^='/away.php?to=']"
+                + ":not(.wall_post_source_icon)",
         wall_post_more: ".wall_post_more",
         likes: ".post_like.no_likes",
         comments: ".reply_link:not(._reply_lnk)"
@@ -109,10 +109,10 @@
         setInterval(checkUrl, intervalDuration);
     }
 
-    NodeList.prototype.forEach = NodeList.prototype.forEach ||
-            Array.prototype.forEach;
-    NodeList.prototype.map = NodeList.prototype.map ||
-            Array.prototype.map;
+    NodeList.prototype.forEach = NodeList.prototype.forEach
+            || Array.prototype.forEach;
+    NodeList.prototype.map = NodeList.prototype.map
+            || Array.prototype.map;
 
     const observer = new MutationObserver(function processMutations(mutations) {
         if (mutations[0].addedNodes.length > 0) {

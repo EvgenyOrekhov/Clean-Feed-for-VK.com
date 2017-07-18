@@ -24,8 +24,8 @@
         })
         .join();
     const css = {
-        groups: "[id^='feed_repost-'], [id^='feed_reposts_'] " +
-                "{ display: none; }",
+        groups: "[id^='feed_repost-'], [id^='feed_reposts_'] "
+                + "{ display: none; }",
         myGroups: "[id^='post-'].post_copy { display: none; }",
         groupsAndPeople: "[id^='feed_repost'] { display: none; }",
 
@@ -95,8 +95,8 @@
         }
 
         if (
-            !sender.tab.url.includes("vk.com/feed") ||
-            (/photos|videos|articles|likes|notifications|comments|updates|replies/)
+            !sender.tab.url.includes("vk.com/feed")
+            || (/photos|videos|articles|likes|notifications|comments|updates|replies/)
                 .test(sender.tab.url)
         ) {
             chrome.pageAction.hide(sender.tab.id);

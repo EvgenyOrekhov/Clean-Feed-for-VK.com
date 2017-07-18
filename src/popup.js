@@ -80,8 +80,8 @@
         });
     }
 
-    NodeList.prototype.forEach = NodeList.prototype.forEach ||
-            Array.prototype.forEach;
+    NodeList.prototype.forEach = NodeList.prototype.forEach
+            || Array.prototype.forEach;
 
     // Load settings:
     chrome.storage.sync.get(setUpTheSettingsPage);
