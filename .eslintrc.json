@@ -5,9 +5,10 @@
     "sourceType": "module"
   },
 
-  "env": {
-    "browser": true
+  "globals": {
+    "chrome": "readonly",
+    "document": "readonly"
   },
 
-  "ignorePatterns": ["dist/"]
+  "ignorePatterns": ["dist/", "src/content-script.js"]
 }

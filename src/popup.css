@@ -1,9 +1,9 @@
-/*csslint order-alphabetical: false */
+/* csslint order-alphabetical: false */
 
 body {
     width: 250px;
-    margin: .3em auto;
-    font-size: .8em;
+    margin: 0.3em auto;
+    font-size: 0.8em;
     font-family: sans-serif;
 }
 
@@ -11,7 +11,7 @@ body {
     text-align: center;
     font-weight: bold;
     font-size: 1.3em;
-    margin-bottom: .2em;
+    margin-bottom: 0.2em;
 }
 
 a {
@@ -23,9 +23,6 @@ a:hover {
 }
 
 form {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
 }
 
@@ -54,9 +51,13 @@ label {
 }
 
 .on-off-switch:hover {
-    -webkit-filter: drop-shadow(0 0 2px #666);
+    filter: drop-shadow(0 0 2px #666);
 }
 
 .on-off-switch-input:checked + .on-off-switch {
     opacity: 0.25;
+}
+
+.hidden {
+    display: none;
 }

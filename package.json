@@ -15,7 +15,7 @@
   "license": "MIT",
   "author": "Evgeny Orekhov",
   "scripts": {
-    "build": "parcel build src/{popup.html,background.js,content-script.js} && cp src/*.png src/*.json dist/",
+    "build": "rm -rf dist/* && parcel build --no-source-maps src/{popup.html,background.js,content-script.js} && cp src/*.png src/*.json dist/",
     "lint": "run-p --aggregate-output lint:**",
     "lint:css": "stylelint src/**/*.css",
     "lint:js": "eslint . --ext .js,.json",
@@ -32,6 +32,9 @@
     "*.css": "stylelint --fix",
     "*.{js,css,json,md,html,yml,yaml}": "prettier --write",
     "*.{js,json}": "eslint --fix --ext .js,.json"
+  },
+  "dependencies": {
+    "actus": "0.0.0-alpha.8"
   },
   "devDependencies": {
     "@twinscom/stylelint-config": "^2.0.1",

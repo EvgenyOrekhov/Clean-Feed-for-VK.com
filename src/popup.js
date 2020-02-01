@@ -1,88 +1,127 @@
-/*global chrome, NodeList */
-/*jslint browser, es6, maxlen: 80 */
+/* eslint-disable fp/no-mutation, no-param-reassign, camelcase */
 
-(function main() {
-    "use strict";
+import { init } from "actus";
 
-    function setUpTheSettingsPage(settings) {
-        const checkboxes = document.querySelectorAll("input");
+function toggle(property) {
+  return state => ({
+    ...state,
+    [property]: !state[property]
+  });
+}
 
-        function hideLabel(label) {
-            const checkbox = label.children[0];
+function addClickHandlers({
+  toggleIsDisabled,
+  toggleGroups,
+  toggleMyGroups,
+  togglePeople,
+  toggleExternalLinks,
+  toggleLinks,
+  toggleApps,
+  toggleInstagram,
+  toggleVideo,
+  toggleGroupShare,
+  toggleMemLink,
+  toggleEventShare,
+  toggleMore,
+  toggleLikes,
+  toggleComments
+}) {
+  const map = {
+    "is-disabled": toggleIsDisabled,
+    groups: toggleGroups,
+    mygroups: toggleMyGroups,
+    people: togglePeople,
+    external_links: toggleExternalLinks,
+    links: toggleLinks,
+    apps: toggleApps,
+    instagram: toggleInstagram,
+    video: toggleVideo,
+    group_share: toggleGroupShare,
+    mem_link: toggleMemLink,
+    event_share: toggleEventShare,
+    wall_post_more: toggleMore,
+    likes: toggleLikes,
+    comments: toggleComments
+  };
 
-            label.style.display = "none";
-            checkbox.checked = false;
-            settings[checkbox.name] = false;
-        }
+  Object.entries(map).forEach(([name, action]) => {
+    document.querySelector(`[name=${name}]`).addEventListener("click", action);
+  });
+}
 
-        function hideOrShowSomeCheckboxes() {
-            const labels2and3 = [
-                document.querySelector("#mygroups-label"),
-                document.querySelector("#people-label")
-            ];
-            const linksLabel = document.querySelector("#links-label");
+const actions = {
+  toggleIsDisabled: toggle("is-disabled"),
+  toggleGroups: state => ({
+    ...toggle("groups")(state),
+    mygroups: false,
+    people: false
+  }),
+  toggleMyGroups: toggle("mygroups"),
+  togglePeople: toggle("people"),
+  toggleExternalLinks: state => ({
+    ...toggle("external_links")(state),
+    links: false
+  }),
+  toggleLinks: toggle("links"),
+  toggleApps: toggle("apps"),
+  toggleInstagram: toggle("instagram"),
+  toggleVideo: toggle("video"),
+  toggleGroupShare: toggle("group_share"),
+  toggleMemLink: toggle("mem_link"),
+  toggleEventShare: toggle("event_share"),
+  toggleMore: toggle("wall_post_more"),
+  toggleLikes: toggle("likes"),
+  toggleComments: toggle("comments")
+};
 
-            checkboxes.forEach(function setDisabledState(checkbox) {
-                if (checkbox.name !== "is-disabled") {
-                    checkbox.disabled = Boolean(settings["is-disabled"]);
-                }
-            });
+function updatePage({ state: settings }) {
+  const checkboxes = document.querySelectorAll("input");
 
-            // If the first checkbox (`groups`) is unchecked
-            // then uncheck the second and the third, hide them,
-            // and reset their settings in storage:
-            labels2and3.forEach(function setLabels2and3(label) {
-                if (settings.groups) {
-                    label.style.display = "block";
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = settings[checkbox.name];
 
-                    return;
-                }
-
-                hideLabel(label);
-            });
-
-            // If the `external_links` checkbox is checked
-            // then uncheck the `links` checkbox, hide it,
-            // and reset its setting in storage:
-            if (settings.external_links) {
-                return hideLabel(linksLabel);
-            }
-
-            linksLabel.style.display = "block";
-        }
-
-        // Catch clicks on checkboxes and update settings,
-        // reapply the main function:
-        function handleClick(event) {
-            settings[event.target.name] = event.target.checked;
-            hideOrShowSomeCheckboxes();
-            chrome.storage.sync.set(settings);
-            chrome.tabs.query(
-                {
-                    currentWindow: true,
-                    active: true
-                },
-                function sendMessage(tabs) {
-                    chrome.runtime.sendMessage({
-                        tabId: tabs[0].id,
-                        action: "execute",
-                        settings
-                    });
-                }
-            );
-        }
-
-        hideOrShowSomeCheckboxes();
-
-        checkboxes.forEach(function setUpCheckbox(checkbox) {
-            checkbox.addEventListener("click", handleClick);
-            checkbox.checked = Boolean(settings[checkbox.name]);
-        });
+    if (checkbox.name !== "is-disabled") {
+      checkbox.disabled = Boolean(settings["is-disabled"]);
     }
+  });
 
-    NodeList.prototype.forEach = NodeList.prototype.forEach
-            || Array.prototype.forEach;
+  document
+    .querySelector("#mygroups-label")
+    .classList.toggle("hidden", !settings.groups);
+  document
+    .querySelector("#people-label")
+    .classList.toggle("hidden", !settings.groups);
+  document
+    .querySelector("#links-label")
+    .classList.toggle("hidden", Boolean(settings.external_links));
+}
 
-    // Load settings:
-    chrome.storage.sync.get(setUpTheSettingsPage);
-}());
+function saveSettings({ state: settings }) {
+  chrome.storage.sync.set(settings);
+}
+
+function applySettings({ state: settings }) {
+  chrome.tabs.query(
+    {
+      currentWindow: true,
+      active: true
+    },
+    function sendMessage([tab]) {
+      chrome.runtime.sendMessage({
+        tabId: tab.id,
+        action: "execute",
+        settings
+      });
+    }
+  );
+}
+
+chrome.storage.sync.get(settings => {
+  const boundActions = init({
+    state: settings,
+    actions,
+    subscribers: [updatePage, saveSettings, applySettings]
+  });
+
+  addClickHandlers(boundActions);
+});
