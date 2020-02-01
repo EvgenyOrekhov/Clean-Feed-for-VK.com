@@ -15,6 +15,7 @@
   "license": "MIT",
   "author": "Evgeny Orekhov",
   "scripts": {
+    "build": "parcel build src/{popup.html,background.js,content-script.js} && cp src/*.png src/*.json dist/",
     "lint": "run-p --aggregate-output lint:**",
     "lint:css": "stylelint src/**/*.css",
     "lint:js": "eslint . --ext .js,.json",
@@ -40,6 +41,7 @@
     "husky": "^4.2.1",
     "lint-staged": "^10.0.7",
     "npm-run-all": "^4.1.5",
+    "parcel": "^2.0.0-alpha.3.2",
     "prettier": "^1.19.1",
     "prettier-plugin-packagejson": "^2.0.10",
     "stylelint": "^13.0.0"

@@ -1,5 +1,5 @@
 {
   "extends": "@twinscom/stylelint-config",
 
-  "ignoreFiles": ["dist/"]
+  "ignoreFiles": ["dist/*"]
 }
