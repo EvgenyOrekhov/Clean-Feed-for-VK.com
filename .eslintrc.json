@@ -1,15 +1,13 @@
 {
-    "extends": "hardcore",
+  "extends": ["hardcore", "hardcore/fp", "prettier", "prettier/unicorn"],
 
-    "env": {
-        "browser": true
-    },
+  "parserOptions": {
+    "sourceType": "module"
+  },
 
-    "rules": {
-        "complexity": [
-            "error",
-            5
-        ],
-        "prefer-destructuring": "off"
-    }
+  "env": {
+    "browser": true
+  },
+
+  "ignorePatterns": ["dist/"]
 }

@@ -1,31 +1,47 @@
 {
-    "name": "clean-feed-for-vk.com",
-    "version": "1.12.0",
-    "description": "Расширение для Google Chrome, которое очищает захламлённые новости ВКонтакте от отстойных репостов ваших друзей",
-    "keywords": [
-        "VK",
-        "ВК",
-        "ВКонтакте"
-    ],
-    "scripts": {
-        "test": "lints"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com.git"
-    },
-    "author": {
-        "name": "Evgeny Orekhov",
-        "url": "https://plus.google.com/+ЕвгенийОрехов"
-    },
-    "license": "AGPL-3.0",
-    "bugs": {
-        "url": "https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com/issues"
-    },
-    "homepage": "https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com#readme",
-    "devDependencies": {
-        "eslint-config-hardcore": "^2.2.0",
-        "lints": "^13.0.1"
-    },
-    "private": true
+  "name": "clean-feed-for-vk.com",
+  "version": "1.12.0",
+  "private": true,
+  "description": "Расширение для Google Chrome, которое очищает захламлённые новости ВКонтакте от отстойных репостов ваших друзей",
+  "keywords": [
+    "VK",
+    "ВК",
+    "ВКонтакте"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EvgenyOrekhov/Clean-Feed-for-VK.com.git"
+  },
+  "license": "MIT",
+  "author": "Evgeny Orekhov",
+  "scripts": {
+    "lint": "run-p --aggregate-output lint:**",
+    "lint:css": "stylelint src/**/*.css",
+    "lint:js": "eslint . --ext .js,.json",
+    "lint:prettier": "prettier --check **/*.{js,css,json,md,html,yml,yaml}",
+    "test": "npm run lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "pre-push": "npm test"
+    }
+  },
+  "lint-staged": {
+    "*.css": "stylelint --fix",
+    "*.{js,css,json,md,html,yml,yaml}": "prettier --write",
+    "*.{js,json}": "eslint --fix --ext .js,.json"
+  },
+  "devDependencies": {
+    "@twinscom/stylelint-config": "^2.0.1",
+    "eslint": "^6.8.0",
+    "eslint-config-hardcore": "^9.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "husky": "^4.2.1",
+    "lint-staged": "^10.0.7",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.19.1",
+    "prettier-plugin-packagejson": "^2.0.10",
+    "stylelint": "^13.0.0"
+  }
 }
