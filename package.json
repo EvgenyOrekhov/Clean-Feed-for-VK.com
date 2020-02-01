@@ -20,7 +20,9 @@
     "lint:css": "stylelint src/**/*.css",
     "lint:js": "eslint . --ext .js,.json",
     "lint:prettier": "prettier --check **/*.{js,css,json,md,html,yml,yaml}",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "preversion": "npm run build && git add dist/",
+    "postversion": "git push && git push --tags"
   },
   "husky": {
     "hooks": {
