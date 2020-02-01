@@ -52,7 +52,6 @@
     "parcel": "^2.0.0-alpha.3.2",
     "prettier": "^1.19.1",
     "prettier-plugin-packagejson": "^2.0.10",
-    "stylelint": "^13.0.0",
-    "version-bump-prompt": "^6.0.0"
+    "stylelint": "^13.0.0"
   }
 }
