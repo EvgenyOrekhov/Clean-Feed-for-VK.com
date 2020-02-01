@@ -10,5 +10,5 @@
     "document": "readonly"
   },
 
-  "ignorePatterns": ["dist/", "src/content-script.js"]
+  "ignorePatterns": ["dist/", "src/content-script.js", "src/background.js"]
 }

@@ -1,63 +1,63 @@
 /* csslint order-alphabetical: false */
 
 body {
-    width: 250px;
-    margin: 0.3em auto;
-    font-size: 0.8em;
-    font-family: sans-serif;
+  width: 250px;
+  margin: 0.3em auto;
+  font-size: 0.8em;
+  font-family: sans-serif;
 }
 
 .title {
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.3em;
-    margin-bottom: 0.2em;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.3em;
+  margin-bottom: 0.2em;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 form {
-    user-select: none;
+  user-select: none;
 }
 
 .textcenter {
-    text-align: center;
-    cursor: default;
+  text-align: center;
+  cursor: default;
 }
 
 label {
-    display: block;
-    cursor: pointer;
+  display: block;
+  cursor: pointer;
 }
 
 .on-off-switch-input {
-    display: none;
+  display: none;
 }
 
 .on-off-switch {
-    display: block;
-    height: 50px;
-    margin-bottom: 5px;
-    background-image: url("on-off-switch.svg");
-    background-size: 15%;
-    background-repeat: no-repeat;
-    background-position: center;
+  display: block;
+  height: 50px;
+  margin-bottom: 5px;
+  background-image: url("on-off-switch.svg");
+  background-size: 15%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .on-off-switch:hover {
-    filter: drop-shadow(0 0 2px #666);
+  filter: drop-shadow(0 0 2px #666);
 }
 
 .on-off-switch-input:checked + .on-off-switch {
-    opacity: 0.25;
+  opacity: 0.25;
 }
 
 .hidden {
-    display: none;
+  display: none;
 }

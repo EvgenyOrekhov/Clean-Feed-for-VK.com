@@ -1,5 +1,9 @@
 {
   "extends": "@twinscom/stylelint-config",
 
+  "rules": {
+    "indentation": 2
+  },
+
   "ignoreFiles": ["dist/*"]
 }
