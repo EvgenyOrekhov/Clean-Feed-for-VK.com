@@ -14,19 +14,5 @@
     "camelcase": "off"
   },
 
-  "overrides": [
-    {
-      "files": ["src/background.js"],
-
-      "parserOptions": {
-        "sourceType": "script"
-      },
-
-      "rules": {
-        "unicorn/consistent-function-scoping": "off"
-      }
-    }
-  ],
-
   "ignorePatterns": ["dist/", "src/content-script.js"]
 }

@@ -1,0 +1,17 @@
+{
+  "is-disabled": false,
+  "groups": true,
+  "mygroups": false,
+  "people": false,
+  "external_links": false,
+  "links": true,
+  "apps": true,
+  "instagram": false,
+  "video": false,
+  "group_share": true,
+  "mem_link": false,
+  "event_share": true,
+  "wall_post_more": false,
+  "likes": false,
+  "comments": false
+}

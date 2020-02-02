@@ -1,5 +1,7 @@
 import { init } from "actus";
 
+import defaultSettings from "./defaultSettings.json";
+
 function toggle(property) {
   return state => ({
     ...state,
@@ -80,7 +82,7 @@ function updatePage({ state: settings }) {
     checkbox.checked = settings[checkbox.name];
 
     if (checkbox.name !== "is-disabled") {
-      checkbox.disabled = Boolean(settings["is-disabled"]);
+      checkbox.disabled = settings["is-disabled"];
     }
   });
 
@@ -92,7 +94,7 @@ function updatePage({ state: settings }) {
     .classList.toggle("hidden", !settings.groups);
   document
     .querySelector("#links-label")
-    .classList.toggle("hidden", Boolean(settings.external_links));
+    .classList.toggle("hidden", settings.external_links);
 }
 /* eslint-enable fp/no-mutation, no-param-reassign */
 
@@ -118,7 +120,7 @@ function applySettings({ state: settings }) {
 
 chrome.storage.sync.get(settings => {
   const boundActions = init({
-    state: settings,
+    state: { ...defaultSettings, ...settings },
     actions,
     subscribers: [updatePage, saveSettings, applySettings]
   });
