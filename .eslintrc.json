@@ -7,12 +7,33 @@
 
   "globals": {
     "chrome": "readonly",
-    "document": "readonly"
+    "document": "readonly",
+    "console": "readonly",
+    "location": "readonly",
+    "setInterval": "readonly",
+    "NodeList": "readonly",
+    "scroll": "readonly",
+    "MutationObserver": "readonly"
   },
 
   "rules": {
     "camelcase": "off"
   },
 
-  "ignorePatterns": ["dist/", "src/content-script.js"]
+  "overrides": [
+    {
+      "files": ["src/content-script.js"],
+
+      "parserOptions": {
+        "sourceType": "script"
+      },
+
+      "rules": {
+        "no-console": "off",
+        "unicorn/consistent-function-scoping": "off"
+      }
+    }
+  ],
+
+  "ignorePatterns": ["dist/"]
 }
