@@ -39,7 +39,7 @@
     event_share: ".event_share",
     external_links:
       ".wall_text [href^='/away.php?to=']" + ":not(.wall_post_source_icon)",
-    wall_post_more: ".wall_post_more",
+    wall_post_more: ".wall_post_more,.wall_copy_more",
     likes: ".like.empty",
     comments: ".comment.empty"
   };
