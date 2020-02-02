@@ -5,24 +5,14 @@
 (function main() {
   const qAndALinks = [
     "ask.fm",
-    "askbook.me",
     "askfm.im",
     "askfm.su",
     "askmes.ru",
-    "askzone.su",
-    "my-truth.ru",
     "nekto.me",
-    "otvechayu.ru",
-    "qroom.ru",
-    "sprashivai.by",
     "sprashivai.ru",
     "sprashivaii.ru",
     "sprashivalka.com",
-    "spring.me",
-    "sprosimenya.com",
-    "sprosi.name",
-    "vopros.me",
-    "voprosmne.ru"
+    "sprosi.name"
   ];
   const selectors = {
     links: qAndALinks
