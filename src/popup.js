@@ -1,5 +1,3 @@
-/* eslint-disable fp/no-mutation, no-param-reassign, camelcase */
-
 import { init } from "actus";
 
 function toggle(property) {
@@ -74,6 +72,7 @@ const actions = {
   toggleComments: toggle("comments")
 };
 
+/* eslint-disable fp/no-mutation, no-param-reassign */
 function updatePage({ state: settings }) {
   const checkboxes = document.querySelectorAll("input");
 
@@ -95,6 +94,7 @@ function updatePage({ state: settings }) {
     .querySelector("#links-label")
     .classList.toggle("hidden", Boolean(settings.external_links));
 }
+/* eslint-enable fp/no-mutation, no-param-reassign */
 
 function saveSettings({ state: settings }) {
   chrome.storage.sync.set(settings);

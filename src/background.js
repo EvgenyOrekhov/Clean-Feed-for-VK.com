@@ -1,9 +1,24 @@
-/*global chrome */
-/*jslint browser, es6 */
-/*eslint camelcase: "off", max-len: "off" */
-
+// eslint-disable-next-line max-statements
 (function main() {
   "use strict";
+
+  const defaultSettings = {
+    "is-disabled": false,
+    groups: true,
+    mygroups: false,
+    people: false,
+    external_links: false,
+    links: true,
+    apps: true,
+    instagram: false,
+    video: false,
+    group_share: true,
+    mem_link: false,
+    event_share: true,
+    wall_post_more: false,
+    likes: false,
+    comments: false
+  };
 
   const classNames = [
     "external_links",
@@ -18,45 +33,87 @@
     "likes",
     "comments"
   ];
+
   const cffvkFiltersSelector = classNames
-    .map(function buildSelector(className) {
-      return `.cffvk-${className}`;
-    })
+    .map(className => `.cffvk-${className}`)
     .join();
-  const css = {
-    groups:
-      "[id^='feed_repost-'], [id^='feed_reposts_'] " + "{ display: none; }",
-    myGroups: "[id^='post-'].post_copy { display: none; }",
-    groupsAndPeople: "[id^='feed_repost'] { display: none; }",
 
-    filters: `${cffvkFiltersSelector} { display: none; }`,
+  const groupsSelector = "[id^='feed_repost-'], [id^='feed_reposts_']";
+  const groupsAndPeopleSelector = "[id^='feed_repost']";
+  const myGroupsSelector = "[id^='post-'].post_copy";
 
-    show: function show(rule) {
-      return rule.replace(/none/g, "block");
+  const hide = "{ display: none; }";
+  const show = "{ display: block; }";
+
+  const showAll = `
+    ${groupsSelector} ${show}
+    ${myGroupsSelector} ${show}
+    ${groupsAndPeopleSelector} ${show}
+    ${cffvkFiltersSelector} ${show}
+  `;
+
+  const hideCffvkFilters = `
+    ${groupsSelector} ${show}
+    ${myGroupsSelector} ${show}
+    ${groupsAndPeopleSelector} ${show}
+    ${cffvkFiltersSelector} ${hide}
+  `;
+
+  const hideGroups = `
+    ${myGroupsSelector} ${show}
+    ${groupsAndPeopleSelector} ${show}
+    ${groupsSelector} ${hide}
+    ${cffvkFiltersSelector} ${hide}
+  `;
+
+  const hideGroupsAndMyGroups = `
+    ${groupsAndPeopleSelector} ${show}
+    ${groupsSelector} ${hide}
+    ${myGroupsSelector} ${hide}
+    ${cffvkFiltersSelector} ${hide}
+  `;
+
+  const hideGroupsAndPeople = `
+    ${myGroupsSelector} ${show}
+    ${groupsSelector} ${show}
+    ${groupsAndPeopleSelector} ${hide}
+    ${cffvkFiltersSelector} ${hide}
+  `;
+
+  const hideAll = `
+    ${groupsSelector} ${hide}
+    ${myGroupsSelector} ${hide}
+    ${groupsAndPeopleSelector} ${hide}
+    ${cffvkFiltersSelector} ${hide}
+  `;
+
+  // eslint-disable-next-line fp/no-let
+  let settings = defaultSettings;
+
+  function getCss() {
+    if (settings.groups) {
+      if (settings.mygroups) {
+        if (settings.people) {
+          return hideAll;
+        }
+
+        return hideGroupsAndMyGroups;
+      }
+
+      if (settings.people) {
+        return hideGroupsAndPeople;
+      }
+
+      return hideGroups;
     }
-  };
-  let settings = {
-    groups: true,
-    links: true,
-    apps: true,
-    group_share: true,
-    event_share: true
-  };
+
+    return hideCffvkFilters;
+  }
 
   function disable(tabId) {
-    chrome.pageAction.setIcon({
-      tabId,
-      path: "disabled-icon16.png"
-    });
-
-    // Show all the divs that have been hidden, stop observing:
-    chrome.tabs.insertCSS(tabId, {
-      code: css.show(css.groupsAndPeople + css.myGroups + css.filters)
-    });
-
-    chrome.tabs.sendMessage(tabId, {
-      action: "disable"
-    });
+    chrome.pageAction.setIcon({ tabId, path: "disabled-icon16.png" });
+    chrome.tabs.insertCSS(tabId, { code: showAll });
+    chrome.tabs.sendMessage(tabId, { action: "disable" });
   }
 
   // The main function
@@ -65,38 +122,19 @@
       return disable(tabId);
     }
 
-    let cssCode = css.show(css.groupsAndPeople + css.myGroups);
-
-    if (settings.groups) {
-      const peopleCssCode = settings.people
-        ? css.groupsAndPeople
-        : css.show(css.groupsAndPeople) + css.groups;
-      const myGroupsCssCode = settings.mygroups
-        ? css.myGroups
-        : css.show(css.myGroups);
-
-      cssCode = peopleCssCode + myGroupsCssCode;
-    }
-
-    chrome.pageAction.setIcon({
-      tabId,
-      path: "icon16.png"
-    });
-    chrome.tabs.insertCSS(tabId, { code: cssCode + css.filters });
-    chrome.tabs.sendMessage(tabId, {
-      action: "clean",
-      settings
-    });
+    chrome.pageAction.setIcon({ tabId, path: "icon16.png" });
+    chrome.tabs.insertCSS(tabId, { code: getCss() });
+    chrome.tabs.sendMessage(tabId, { action: "clean", settings });
   }
 
   function activate(sender) {
-    if (/\/feed\?[wz]=/.test(sender.tab.url)) {
+    if (/\/feed\?[wz]=/u.test(sender.tab.url)) {
       return;
     }
 
     if (
       !sender.tab.url.includes("vk.com/feed") ||
-      /photos|videos|articles|likes|notifications|comments|updates|replies/.test(
+      /photos|videos|articles|likes|notifications|comments|updates|replies/u.test(
         sender.tab.url
       )
     ) {
@@ -106,10 +144,11 @@
     }
 
     chrome.storage.sync.get(function applySettings(loadedSettings) {
-      if (Object.keys(loadedSettings).length) {
-        settings = loadedSettings;
+      if (Object.keys(loadedSettings).length === 0) {
+        chrome.storage.sync.set(defaultSettings);
       } else {
-        chrome.storage.sync.set(settings);
+        // eslint-disable-next-line fp/no-mutation
+        settings = { ...defaultSettings, ...loadedSettings };
       }
 
       execute(sender.tab.id);
@@ -120,7 +159,8 @@
 
   chrome.runtime.onMessage.addListener(function handleMessage(message, sender) {
     if (message.action === "execute") {
-      settings = message.settings;
+      // eslint-disable-next-line fp/no-mutation
+      settings = { ...defaultSettings, ...message.settings };
 
       return execute(message.tabId);
     }
