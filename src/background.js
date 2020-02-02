@@ -114,7 +114,7 @@ function activate(sender) {
 
   if (
     !sender.tab.url.includes("vk.com/feed") ||
-    /photos|videos|articles|likes|notifications|comments|updates|replies/u.test(
+    /photos|videos|podcasts|recommended|search|likes|updates|comments|notifications/u.test(
       sender.tab.url
     )
   ) {
