@@ -1,6 +1,6 @@
 {
   "name": "Чистые Новости для VK.com",
-  "version": "1.12.4",
+  "version": "1.12.5",
   "manifest_version": 2,
   "minimum_chrome_version": "70",
   "description": "Очищает захламлённые новости ВКонтакте от отстойных репостов ваших друзей",
