@@ -2,7 +2,6 @@
 
 body {
   width: 250px;
-  margin: 0.3em auto;
   font-size: 0.8em;
   font-family: sans-serif;
 }
@@ -34,6 +33,8 @@ form {
 label {
   display: block;
   cursor: pointer;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .on-off-switch-input {
