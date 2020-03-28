@@ -1,6 +1,6 @@
 {
   "name": "clean-feed-for-vk.com",
-  "version": "1.12.4",
+  "version": "1.12.5",
   "private": true,
   "description": "Расширение для Google Chrome, которое очищает захламлённые новости ВКонтакте от отстойных репостов ваших друзей",
   "keywords": [
