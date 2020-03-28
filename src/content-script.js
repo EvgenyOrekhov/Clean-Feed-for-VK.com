@@ -11,12 +11,12 @@
     "sprashivai.ru",
     "sprashivaii.ru",
     "sprashivalka.com",
-    "sprosi.name"
+    "sprosi.name",
   ];
 
   const selectors = {
     links: qAndALinks
-      .map(qAndALink => `.wall_text [href*="${qAndALink}"]`)
+      .map((qAndALink) => `.wall_text [href*="${qAndALink}"]`)
       .join(),
 
     apps: ".wall_post_source_default",
@@ -29,7 +29,7 @@
       ".wall_text [href^='/away.php?to=']:not(.wall_post_source_icon)",
     wall_post_more: ".wall_post_more,.wall_copy_more",
     likes: ".like.empty",
-    comments: ".comment.empty"
+    comments: ".comment.empty",
   };
 
   // eslint-disable-next-line fp/no-let
@@ -41,7 +41,7 @@
   function toggleCffvkClass([settingName, selector]) {
     feed
       .querySelectorAll(selector)
-      .map(element => element.closest(".feed_row"))
+      .map((element) => element.closest(".feed_row"))
       .filter(Boolean)
       .filter(function isNotAd(element) {
         return (
@@ -50,7 +50,7 @@
           ) === null
         );
       })
-      .forEach(feedRow =>
+      .forEach((feedRow) =>
         feedRow.classList.toggle(`cffvk-${settingName}`, settings[settingName])
       );
   }
@@ -63,7 +63,7 @@
   function removeInlineStyles() {
     const posts = feed.querySelectorAll(".feed_row");
 
-    posts.forEach(post => post.removeAttribute("style"));
+    posts.forEach((post) => post.removeAttribute("style"));
 
     scroll(0, 0);
   }

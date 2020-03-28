@@ -11,11 +11,11 @@ const classNames = [
   "event_share",
   "wall_post_more",
   "likes",
-  "comments"
+  "comments",
 ];
 
 const cffvkFiltersSelector = classNames
-  .map(className => `.cffvk-${className}`)
+  .map((className) => `.cffvk-${className}`)
   .join();
 
 const groupsSelector = "[id^='feed_repost-'], [id^='feed_reposts_']";

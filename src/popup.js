@@ -3,9 +3,9 @@ import { init } from "actus";
 import defaultSettings from "./defaultSettings.json";
 
 function toggle(property) {
-  return state => ({
+  return (state) => ({
     ...state,
-    [property]: !state[property]
+    [property]: !state[property],
   });
 }
 
@@ -24,7 +24,7 @@ function addClickHandlers({
   toggleEventShare,
   toggleMore,
   toggleLikes,
-  toggleComments
+  toggleComments,
 }) {
   const map = {
     "is-disabled": toggleIsDisabled,
@@ -41,7 +41,7 @@ function addClickHandlers({
     event_share: toggleEventShare,
     wall_post_more: toggleMore,
     likes: toggleLikes,
-    comments: toggleComments
+    comments: toggleComments,
   };
 
   Object.entries(map).forEach(([name, action]) => {
@@ -51,16 +51,16 @@ function addClickHandlers({
 
 const actions = {
   toggleIsDisabled: toggle("is-disabled"),
-  toggleGroups: state => ({
+  toggleGroups: (state) => ({
     ...toggle("groups")(state),
     mygroups: false,
-    people: false
+    people: false,
   }),
   toggleMyGroups: toggle("mygroups"),
   togglePeople: toggle("people"),
-  toggleExternalLinks: state => ({
+  toggleExternalLinks: (state) => ({
     ...toggle("external_links")(state),
-    links: false
+    links: false,
   }),
   toggleLinks: toggle("links"),
   toggleApps: toggle("apps"),
@@ -71,14 +71,14 @@ const actions = {
   toggleEventShare: toggle("event_share"),
   toggleMore: toggle("wall_post_more"),
   toggleLikes: toggle("likes"),
-  toggleComments: toggle("comments")
+  toggleComments: toggle("comments"),
 };
 
 /* eslint-disable fp/no-mutation, no-param-reassign */
 function updatePage({ state: settings }) {
   const checkboxes = document.querySelectorAll("input");
 
-  checkboxes.forEach(checkbox => {
+  checkboxes.forEach((checkbox) => {
     checkbox.checked = settings[checkbox.name];
 
     if (checkbox.name !== "is-disabled") {
@@ -106,23 +106,23 @@ function applySettings({ state: settings }) {
   chrome.tabs.query(
     {
       currentWindow: true,
-      active: true
+      active: true,
     },
     function sendMessage([tab]) {
       chrome.runtime.sendMessage({
         tabId: tab.id,
         action: "execute",
-        settings
+        settings,
       });
     }
   );
 }
 
-chrome.storage.sync.get(settings => {
+chrome.storage.sync.get((settings) => {
   const boundActions = init({
     state: { ...defaultSettings, ...settings },
     actions,
-    subscribers: [updatePage, saveSettings, applySettings]
+    subscribers: [updatePage, saveSettings, applySettings],
   });
 
   addClickHandlers(boundActions);
