@@ -1,47 +1,25 @@
 import { init } from "actus";
+import defaultActions from "actus-default-actions";
 
 import defaultSettings from "./defaultSettings.json";
 
-function toggle(property) {
-  return (state) => ({
-    ...state,
-    [property]: !state[property],
-  });
-}
-
-function addClickHandlers({
-  toggleIsDisabled,
-  toggleGroups,
-  toggleMyGroups,
-  togglePeople,
-  toggleExternalLinks,
-  toggleLinks,
-  toggleApps,
-  toggleInstagram,
-  toggleVideo,
-  toggleGroupShare,
-  toggleMemLink,
-  toggleEventShare,
-  toggleMore,
-  toggleLikes,
-  toggleComments,
-}) {
+function addClickHandlers(actions) {
   const map = {
-    "is-disabled": toggleIsDisabled,
-    groups: toggleGroups,
-    mygroups: toggleMyGroups,
-    people: togglePeople,
-    external_links: toggleExternalLinks,
-    links: toggleLinks,
-    apps: toggleApps,
-    instagram: toggleInstagram,
-    video: toggleVideo,
-    group_share: toggleGroupShare,
-    mem_link: toggleMemLink,
-    event_share: toggleEventShare,
-    wall_post_more: toggleMore,
-    likes: toggleLikes,
-    comments: toggleComments,
+    "is-disabled": actions["is-disabled"].toggle,
+    groups: actions.toggleGroups,
+    mygroups: actions.mygroups.toggle,
+    people: actions.people.toggle,
+    external_links: actions.toggleExternalLinks,
+    links: actions.links.toggle,
+    apps: actions.apps.toggle,
+    instagram: actions.instagram.toggle,
+    video: actions.video.toggle,
+    group_share: actions.group_share.toggle,
+    mem_link: actions.mem_link.toggle,
+    event_share: actions.event_share.toggle,
+    wall_post_more: actions.wall_post_more.toggle,
+    likes: actions.likes.toggle,
+    comments: actions.comments.toggle,
   };
 
   Object.entries(map).forEach(([name, action]) => {
@@ -50,28 +28,17 @@ function addClickHandlers({
 }
 
 const actions = {
-  toggleIsDisabled: toggle("is-disabled"),
-  toggleGroups: (state) => ({
-    ...toggle("groups")(state),
+  toggleGroups: (ignore, state) => ({
+    ...state,
+    groups: !state.groups,
     mygroups: false,
     people: false,
   }),
-  toggleMyGroups: toggle("mygroups"),
-  togglePeople: toggle("people"),
-  toggleExternalLinks: (state) => ({
-    ...toggle("external_links")(state),
+  toggleExternalLinks: (ignore, state) => ({
+    ...state,
+    external_links: !state.external_links,
     links: false,
   }),
-  toggleLinks: toggle("links"),
-  toggleApps: toggle("apps"),
-  toggleInstagram: toggle("instagram"),
-  toggleVideo: toggle("video"),
-  toggleGroupShare: toggle("group_share"),
-  toggleMemLink: toggle("mem_link"),
-  toggleEventShare: toggle("event_share"),
-  toggleMore: toggle("wall_post_more"),
-  toggleLikes: toggle("likes"),
-  toggleComments: toggle("comments"),
 };
 
 /* eslint-disable fp/no-mutation, no-param-reassign */
@@ -119,11 +86,14 @@ function applySettings({ state: settings }) {
 }
 
 chrome.storage.sync.get((settings) => {
-  const boundActions = init({
-    state: { ...defaultSettings, ...settings },
-    actions,
-    subscribers: [updatePage, saveSettings, applySettings],
-  });
+  const boundActions = init([
+    defaultActions(defaultSettings),
+    {
+      state: { ...defaultSettings, ...settings },
+      actions,
+      subscribers: [updatePage, saveSettings, applySettings],
+    },
+  ]);
 
   addClickHandlers(boundActions);
 });

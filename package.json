@@ -39,7 +39,8 @@
     "chrome 70"
   ],
   "dependencies": {
-    "actus": "0.0.0-alpha.8"
+    "actus": "^0.2.0-alpha.1",
+    "actus-default-actions": "0.1.0-alpha.0"
   },
   "devDependencies": {
     "@twinscom/stylelint-config": "^2.1.0",
