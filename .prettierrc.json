@@ -1,7 +1,7 @@
 {
   "overrides": [
     {
-      "files": ["*.yml", "*.yaml", ".htmlhintrc"],
+      "files": [".htmlhintrc"],
       "options": { "parser": "json" }
     }
   ]

@@ -1,6 +1,5 @@
 # [Чистые Новости для VK.com](https://chrome.google.com/webstore/detail/poannipkjoijnlchnpljlhgphaappbkf)
 
-[![Travis CI build status](https://img.shields.io/travis/EvgenyOrekhov/Clean-Feed-for-VK.com/develop.svg?style=flat-square)](https://travis-ci.org/EvgenyOrekhov/Clean-Feed-for-VK.com)
 [![Codacy grade](https://img.shields.io/codacy/ec07e4d8bca5469ebf0e1ea508d0aae6/develop.svg?style=flat-square)](https://www.codacy.com/app/EvgenyOrekhov/Clean-Feed-for-VK-com/dashboard?bid=3038614)
 
 Расширение для Google Chrome, которое очищает захламлённые новости ВКонтакте от
